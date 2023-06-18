@@ -1,0 +1,55 @@
+{
+  "name": "shchus-backend",
+  "version": "1.0.0",
+  "engines": {
+    "node": "18.x"
+  },
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "dev": "npx nodemon",
+    "start": "npm run build && node build/src/main",
+    "build": "rimraf ./build && npx tsc",
+    "lint": "npx eslint ./src",
+    "lint-format": "npx eslint ./src --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vladymyr226/shchus-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vladymyr226/shchus-backend/issues"
+  },
+  "homepage": "https://github.com/Vladymyr226/shchus-backend#readme",
+  "dependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
+    "aws-sdk": "^2.1333.0",
+    "axios": "^1.2.3",
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.7.0",
+    "jsonwebtoken": "^9.0.0",
+    "knex": "^2.4.0",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.10.0",
+    "typescript": "^4.9.4",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "@types/node": "^18.14.6",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
+    "eslint": "^8.31.0",
+    "nodemon": "^2.0.20",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1"
+  }
+}
