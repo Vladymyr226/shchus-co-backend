@@ -3,16 +3,23 @@
   "builds": [
     {
       "src": "src/main.ts",
-      "use": "@vercel/node@1.9.1",
-      "config": {
-        "maxLambdaSize": "15mb"
-      }
+      "use": "@vercel/node@1.9.1"
     }
   ],
   "routes": [
     {
+      "src": "/api-со/(.*)",
+      "dest": "src/main.ts"
+    },
+    {
       "src": "/(.*)",
       "dest": "src/main.ts"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api-со/(.*)",
+      "destination": "/"
     }
   ]
 }
