@@ -16,7 +16,7 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["src/**/*"],
+  "include": ["./api/*.ts", "src/**/*"],
   "exclude": ["node_modules"],
   "lib": ["esnext"],
   "ts-node": {

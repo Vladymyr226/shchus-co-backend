@@ -11,7 +11,8 @@
     "start": "npm run build && node build/src/main",
     "build": "rimraf ./build && npx tsc",
     "lint": "npx eslint ./src",
-    "lint-format": "npx eslint ./src --fix"
+    "lint-format": "npx eslint ./src --fix",
+    "vercel-build": "echo hello"
   },
   "repository": {
     "type": "git",
