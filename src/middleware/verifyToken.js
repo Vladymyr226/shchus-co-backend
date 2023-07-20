@@ -7,15 +7,19 @@ export async function verifyToken(req, res, next) {
   if (!token) {
     return res.status(401).json({ message: 'Token is not provided' })
   }
+
   try {
     const decoded = await jwt.verify(token, process.env.SECRET)
-    console.log([decoded.id])
+    const userId = decoded.id
 
-    const rows = await db.select().from('users').where('id', '=', decoded.id)
+    console.log([userId])
 
-    if (!rows[0]) {
+    const user = await db('users').where('id', userId).first()
+
+    if (!user) {
       return res.status(400).json({ message: 'The token you provided is invalid' })
     }
+
     next()
   } catch (error) {
     return res.status(400).json(error)

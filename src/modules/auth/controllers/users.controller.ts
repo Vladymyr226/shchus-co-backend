@@ -6,6 +6,10 @@ import { generateToken } from '../../../utils/token.utils'
 export async function registration(req: Request, res: Response) {
   const { name, surname, email, password } = req.query
 
+  if (!name || !surname || !email || !password) {
+    return res.status(400).json({ message: 'All fields are required' })
+  }
+
   const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(7))
 
   const userToDB = {
@@ -16,13 +20,18 @@ export async function registration(req: Request, res: Response) {
   }
 
   try {
+    const existingUser = await db('users').where('email', email).first()
+
+    if (existingUser) {
+      return res.status(409).json({ message: 'User with this email already exists' })
+    }
     const newUser = await db('users').insert(userToDB).returning('*')
     console.log(newUser)
     const token = generateToken(newUser[0].id)
     console.log('token-registration', token)
     return res.status(201).json({ token, user: newUser[0] })
   } catch (error) {
-    console.log('Error in registration-controller', error)
+    console.error('Error in registration-controller', error)
     return res.status(400).json({ message: error })
   }
 }
@@ -42,7 +51,7 @@ export async function login(req, res) {
     console.log('token-login ', token)
     return res.status(200).json({ token, user: user[0] })
   } catch (error) {
-    console.log('Error in login-controller', error)
+    console.error('Error in login-controller', error)
     return res.status(400).json({ message: error })
   }
 }
