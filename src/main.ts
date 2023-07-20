@@ -76,7 +76,7 @@ function addApiCoRoutes() {
   return router
 }
 
-app.use('/api-co', addApiCoRoutes())
+app.use('/api', addApiCoRoutes())
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json('Health check works!')
