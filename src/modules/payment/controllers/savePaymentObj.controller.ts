@@ -16,9 +16,9 @@ const savePaymentObj = async (req: Request, res: Response) => {
     const payment = await db('subscriptions').insert(paymentToDB).returning('*')
     console.log(payment)
 
-    return res.status(200).json({ message: 'OK' })
+    return res.status(201).json({ message: 'OK' })
   } catch (error) {
-    console.log('Error in savePaymentObj.controller.ts', error)
+    console.error('Error in savePaymentObj.controller.ts', error)
     return res.status(400).json({ message: error })
   }
 }

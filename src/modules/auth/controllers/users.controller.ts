@@ -27,8 +27,10 @@ export async function registration(req: Request, res: Response) {
     }
     const newUser = await db('users').insert(userToDB).returning('*')
     console.log(newUser)
+
     const token = generateToken(newUser[0].id)
     console.log('token-registration', token)
+
     return res.status(201).json({ token, user: newUser[0] })
   } catch (error) {
     console.error('Error in registration-controller', error)

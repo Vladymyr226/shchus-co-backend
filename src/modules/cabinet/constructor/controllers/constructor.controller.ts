@@ -119,9 +119,9 @@ export async function createConstructor(req, res: Response) {
     const newConstructor = await db('сonstructors').insert(constructorToDB).returning('*')
     console.log(newConstructor)
 
-    return res.status(200).json({ message: 'OK' })
+    return res.status(201).json({ message: 'OK' })
   } catch (error) {
-    console.log('Error in constructor.controller.ts', error)
+    console.error('Error in constructor.controller.ts', error)
     return res.status(400).json({ message: error })
   }
 }
