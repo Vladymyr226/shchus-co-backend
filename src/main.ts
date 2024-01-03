@@ -6,7 +6,7 @@ import { Router } from 'express'
 import { createPaymentRouter } from './modules/payment/routes/payment'
 import { errorHandlerMiddleware } from './middleware/error.middleware'
 import './configs/dotenv.config'
-import { createCabinetRouter } from './modules/cabinet/products/routes/products.routes'
+import { createCabinetRouter } from './modules/cabinet/products/routes/routes'
 import { createProductsRouter } from './modules/product/routes/product'
 import multer from 'multer'
 const winston = require('winston')
