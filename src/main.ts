@@ -53,7 +53,7 @@ app.use(
       /www.shchus.co/,
       /shchus.co/,
       /shchus-co.vercel.app/,
-      /shchus-co-backend.vercel.app/,
+      /cb-shchus.vercel.app/,
       /http:\/\/localhost.*/,
       /http:\/\/172.*/,
       /http:\/\/192.*/,
