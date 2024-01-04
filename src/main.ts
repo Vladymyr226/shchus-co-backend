@@ -48,19 +48,20 @@ const app = express()
 app.use(express.json())
 
 app.use(
-  cors({
-    origin: [
-      /www.shchus.co/,
-      /shchus.co/,
-      /shchus-co.vercel.app/,
-      /cb-shchus.vercel.app/,
-      /http:\/\/localhost.*/,
-      /http:\/\/172.*/,
-      /http:\/\/192.*/,
-      /http:\/\/54.154.216.60/,
-    ],
-    credentials: true,
-  })
+  cors()
+  // {
+  //   origin: [
+  //     /www.shchus.co/,
+  //     /shchus.co/,
+  //     /shchus-co.vercel.app/,
+  //     /cb-shchus.vercel.app/,
+  //     /http:\/\/localhost.*/,
+  //     /http:\/\/172.*/,
+  //     /http:\/\/192.*/,
+  //     /http:\/\/54.154.216.60/,
+  //   ],
+  //   credentials: true,
+  // }
 )
 
 app.use(bodyParser.urlencoded({ extended: false }))
