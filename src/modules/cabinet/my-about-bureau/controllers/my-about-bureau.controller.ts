@@ -4,6 +4,11 @@ import { uploadFileToS3 } from '../../../../helper/helper'
 
 export async function createMyAboutBureau(req, res: Response) {
   const { lorem0, lorem1, lorem2, lorem3, lorem4, lorem5, lorem6, lorem7, lorem8 } = req.query
+  const linksArray = req.body.fileUrls
+
+  console.log(linksArray)
+
+  return
 
   const arrDifferentTypesFiles = Object.keys(req.files)
   let arrFiles: any[] = []
