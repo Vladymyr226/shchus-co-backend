@@ -51,16 +51,16 @@ export function createCabinetRouter() {
     { name: 'archiveLaunchEnterprise', maxCount: 1 },
   ])
 
-  const multiUploadMyAboutBureau = upload.fields([
-    { name: 'imgFile0', maxCount: 1 },
-    { name: 'imgFile1', maxCount: 1 },
-    { name: 'imgFile2', maxCount: 1 },
-    { name: 'imgFile3', maxCount: 1 },
-    { name: 'imgFile4', maxCount: 1 },
-    { name: 'videoFile', maxCount: 1 },
-    { name: 'videoFile1', maxCount: 1 },
-    { name: 'pdfFile', maxCount: 1 },
-  ])
+  // const multiUploadMyAboutBureau = upload.fields([
+  //   { name: 'imgFile0', maxCount: 1 },
+  //   { name: 'imgFile1', maxCount: 1 },
+  //   { name: 'imgFile2', maxCount: 1 },
+  //   { name: 'imgFile3', maxCount: 1 },
+  //   { name: 'imgFile4', maxCount: 1 },
+  //   { name: 'videoFile', maxCount: 1 },
+  //   { name: 'videoFile1', maxCount: 1 },
+  //   { name: 'pdfFile', maxCount: 1 },
+  // ])
 
   const multiUploadMyAboutShchus = upload.fields([
     { name: 'imgFile0', maxCount: 1 },
@@ -114,7 +114,7 @@ export function createCabinetRouter() {
 
   // cb ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-  router.post('/my-about-bureau', multiUploadMyAboutBureau, createMyAboutBureau)
+  router.post('/my-about-bureau', createMyAboutBureau)
   router.get('/my-about-bureaus', myAboutBureaus)
 
   router.post('/my-about-shchus', multiUploadMyAboutShchus, createMyAboutShchus)
