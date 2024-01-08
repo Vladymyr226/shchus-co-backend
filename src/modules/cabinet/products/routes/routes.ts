@@ -62,14 +62,14 @@ export function createCabinetRouter() {
   //   { name: 'pdfFile', maxCount: 1 },
   // ])
 
-  const multiUploadMyAboutShchus = upload.fields([
-    { name: 'imgFile0', maxCount: 1 },
-    { name: 'imgFile2', maxCount: 1 },
-    { name: 'imgFile3', maxCount: 1 },
-    { name: 'imgFile4', maxCount: 1 },
-    { name: 'imgFile5', maxCount: 1 },
-    { name: 'pdfFile', maxCount: 1 },
-  ])
+  // const multiUploadMyAboutShchus = upload.fields([
+  //   { name: 'imgFile0', maxCount: 1 },
+  //   { name: 'imgFile2', maxCount: 1 },
+  //   { name: 'imgFile3', maxCount: 1 },
+  //   { name: 'imgFile4', maxCount: 1 },
+  //   { name: 'imgFile5', maxCount: 1 },
+  //   { name: 'pdfFile', maxCount: 1 },
+  // ])
 
   const multiUploadMyArchiveHub = upload.fields([
     { name: 'imgFile0', maxCount: 1 },
@@ -117,7 +117,7 @@ export function createCabinetRouter() {
   router.post('/my-about-bureau', createMyAboutBureau)
   router.get('/my-about-bureaus', myAboutBureaus)
 
-  router.post('/my-about-shchus', multiUploadMyAboutShchus, createMyAboutShchus)
+  router.post('/my-about-shchus', createMyAboutShchus)
   router.get('/my-about-shchuses', myAboutShchuses)
 
   router.post('/my-archive-hub', multiUploadMyArchiveHub, createMyArchiveHub)
