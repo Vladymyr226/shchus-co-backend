@@ -8,7 +8,10 @@ import { createMyAboutBureau } from '../../my-about-bureau/controllers/my-about-
 import { myAboutBureaus } from '../../my-about-bureau/controllers/my-about-bureaus.controller'
 import { createMyAboutShchus } from '../../my-about-shchus/controllers/my-about-shchus.controller'
 import { myAboutShchuses } from '../../my-about-shchus/controllers/my-about-shchuses.controller'
-import { myArchiveHubs } from '../../my-archive-hub/controllers/my-archive-hubs.controller'
+import {
+  myArchiveHubById,
+  myArchiveHubs,
+} from '../../my-archive-hub/controllers/my-archive-hubs.controller'
 import { createMyArchiveHub } from '../../my-archive-hub/controllers/my-archive-hub.controller'
 import { myConstructorDesigners } from '../../my-constructor-designers/controllers/my-constructor-designers.controller'
 import { createMyConstructorDesigner } from '../../my-constructor-designers/controllers/my-constructor-designer.controller'
@@ -71,42 +74,42 @@ export function createCabinetRouter() {
   //   { name: 'pdfFile', maxCount: 1 },
   // ])
 
-  const multiUploadMyArchiveHub = upload.fields([
-    { name: 'imgFile0', maxCount: 1 },
-    { name: 'archiveFile0', maxCount: 1 },
-  ])
+  // const multiUploadMyArchiveHub = upload.fields([
+  //   { name: 'imgFile0', maxCount: 1 },
+  //   { name: 'archiveFile0', maxCount: 1 },
+  // ])
 
-  const multiUploadMyConstructorDesigner = upload.fields([
-    { name: 'videoFile0', maxCount: 1 },
-    { name: 'imgFile0', maxCount: 1 },
-    { name: 'imgFile2', maxCount: 1 },
-    { name: 'videoFile1', maxCount: 1 },
-    { name: 'archiveFile0', maxCount: 1 },
-  ])
+  // const multiUploadMyConstructorDesigner = upload.fields([
+  //   { name: 'videoFile0', maxCount: 1 },
+  //   { name: 'imgFile0', maxCount: 1 },
+  //   { name: 'imgFile2', maxCount: 1 },
+  //   { name: 'videoFile1', maxCount: 1 },
+  //   { name: 'archiveFile0', maxCount: 1 },
+  // ])
 
-  const multiUploadMyConstructorStartup = upload.fields([
-    { name: 'videoFile0', maxCount: 1 },
-    { name: 'imgFile0', maxCount: 1 },
-    { name: 'imgFile2', maxCount: 1 },
-    { name: 'videoFile1', maxCount: 1 },
-    { name: 'archiveFile0', maxCount: 1 },
-  ])
+  // const multiUploadMyConstructorStartup = upload.fields([
+  //   { name: 'videoFile0', maxCount: 1 },
+  //   { name: 'imgFile0', maxCount: 1 },
+  //   { name: 'imgFile2', maxCount: 1 },
+  //   { name: 'videoFile1', maxCount: 1 },
+  //   { name: 'archiveFile0', maxCount: 1 },
+  // ])
 
-  const multiUploadMyConstructorTalent = upload.fields([
-    { name: 'videoFile0', maxCount: 1 },
-    { name: 'imgFile0', maxCount: 1 },
-    { name: 'imgFile2', maxCount: 1 },
-    { name: 'videoFile1', maxCount: 1 },
-    { name: 'archiveFile0', maxCount: 1 },
-  ])
+  // const multiUploadMyConstructorTalent = upload.fields([
+  //   { name: 'videoFile0', maxCount: 1 },
+  //   { name: 'imgFile0', maxCount: 1 },
+  //   { name: 'imgFile2', maxCount: 1 },
+  //   { name: 'videoFile1', maxCount: 1 },
+  //   { name: 'archiveFile0', maxCount: 1 },
+  // ])
 
-  const multiUploadMyConstructorIdea = upload.fields([
-    { name: 'videoFile0', maxCount: 1 },
-    { name: 'imgFile0', maxCount: 1 },
-    { name: 'imgFile2', maxCount: 1 },
-    { name: 'videoFile1', maxCount: 1 },
-    { name: 'archiveFile0', maxCount: 1 },
-  ])
+  // const multiUploadMyConstructorIdea = upload.fields([
+  //   { name: 'videoFile0', maxCount: 1 },
+  //   { name: 'imgFile0', maxCount: 1 },
+  //   { name: 'imgFile2', maxCount: 1 },
+  //   { name: 'videoFile1', maxCount: 1 },
+  //   { name: 'archiveFile0', maxCount: 1 },
+  // ])
 
   router.post('/product', multiUploadProducts, createProduct)
   router.post('/constructor', multiUploadConstructor, createConstructor)
@@ -120,27 +123,20 @@ export function createCabinetRouter() {
   router.post('/my-about-shchus', createMyAboutShchus)
   router.get('/my-about-shchuses', myAboutShchuses)
 
-  router.post('/my-archive-hub', multiUploadMyArchiveHub, createMyArchiveHub)
+  router.post('/my-archive-hub', createMyArchiveHub)
   router.get('/my-archive-hubs', myArchiveHubs)
+  router.get('/my-archive-hub-by', myArchiveHubById)
 
-  router.post(
-    '/my-constructor-designer',
-    multiUploadMyConstructorDesigner,
-    createMyConstructorDesigner
-  )
+  router.post('/my-constructor-designer', createMyConstructorDesigner)
   router.get('/my-constructor-designers', myConstructorDesigners)
 
-  router.post(
-    '/my-constructor-startup',
-    multiUploadMyConstructorStartup,
-    createMyConstructorStartup
-  )
+  router.post('/my-constructor-startup', createMyConstructorStartup)
   router.get('/my-constructor-startups', myConstructorStartups)
 
-  router.post('/my-constructor-talent', multiUploadMyConstructorTalent, createMyConstructorTalent)
+  router.post('/my-constructor-talent', createMyConstructorTalent)
   router.get('/my-constructor-talents', myConstructorTalents)
 
-  router.post('/my-constructor-idea', multiUploadMyConstructorIdea, createMyConstructorIdea)
+  router.post('/my-constructor-idea', createMyConstructorIdea)
   router.get('/my-constructor-ideas', myConstructorIdeas)
 
   return router
