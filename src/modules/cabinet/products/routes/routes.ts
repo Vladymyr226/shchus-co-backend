@@ -21,6 +21,8 @@ import { createMyConstructorTalent } from '../../my-constructor-talents/controll
 import { myConstructorTalents } from '../../my-constructor-talents/controllers/my-constructor-talents.controller'
 import { createMyConstructorIdea } from '../../my-constructor-ideas/controllers/my-constructor-idea.controller'
 import { myConstructorIdeas } from '../../my-constructor-ideas/controllers/my-constructor-ideas.controller'
+import { createMyConstructorr } from '../../constructorr/my-constructorr.controller'
+import { myConstructorrs, myConstructorrById } from '../../constructorr/my-constructorrs.controller'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -54,63 +56,6 @@ export function createCabinetRouter() {
     { name: 'archiveLaunchEnterprise', maxCount: 1 },
   ])
 
-  // const multiUploadMyAboutBureau = upload.fields([
-  //   { name: 'imgFile0', maxCount: 1 },
-  //   { name: 'imgFile1', maxCount: 1 },
-  //   { name: 'imgFile2', maxCount: 1 },
-  //   { name: 'imgFile3', maxCount: 1 },
-  //   { name: 'imgFile4', maxCount: 1 },
-  //   { name: 'videoFile', maxCount: 1 },
-  //   { name: 'videoFile1', maxCount: 1 },
-  //   { name: 'pdfFile', maxCount: 1 },
-  // ])
-
-  // const multiUploadMyAboutShchus = upload.fields([
-  //   { name: 'imgFile0', maxCount: 1 },
-  //   { name: 'imgFile2', maxCount: 1 },
-  //   { name: 'imgFile3', maxCount: 1 },
-  //   { name: 'imgFile4', maxCount: 1 },
-  //   { name: 'imgFile5', maxCount: 1 },
-  //   { name: 'pdfFile', maxCount: 1 },
-  // ])
-
-  // const multiUploadMyArchiveHub = upload.fields([
-  //   { name: 'imgFile0', maxCount: 1 },
-  //   { name: 'archiveFile0', maxCount: 1 },
-  // ])
-
-  // const multiUploadMyConstructorDesigner = upload.fields([
-  //   { name: 'videoFile0', maxCount: 1 },
-  //   { name: 'imgFile0', maxCount: 1 },
-  //   { name: 'imgFile2', maxCount: 1 },
-  //   { name: 'videoFile1', maxCount: 1 },
-  //   { name: 'archiveFile0', maxCount: 1 },
-  // ])
-
-  // const multiUploadMyConstructorStartup = upload.fields([
-  //   { name: 'videoFile0', maxCount: 1 },
-  //   { name: 'imgFile0', maxCount: 1 },
-  //   { name: 'imgFile2', maxCount: 1 },
-  //   { name: 'videoFile1', maxCount: 1 },
-  //   { name: 'archiveFile0', maxCount: 1 },
-  // ])
-
-  // const multiUploadMyConstructorTalent = upload.fields([
-  //   { name: 'videoFile0', maxCount: 1 },
-  //   { name: 'imgFile0', maxCount: 1 },
-  //   { name: 'imgFile2', maxCount: 1 },
-  //   { name: 'videoFile1', maxCount: 1 },
-  //   { name: 'archiveFile0', maxCount: 1 },
-  // ])
-
-  // const multiUploadMyConstructorIdea = upload.fields([
-  //   { name: 'videoFile0', maxCount: 1 },
-  //   { name: 'imgFile0', maxCount: 1 },
-  //   { name: 'imgFile2', maxCount: 1 },
-  //   { name: 'videoFile1', maxCount: 1 },
-  //   { name: 'archiveFile0', maxCount: 1 },
-  // ])
-
   router.post('/product', multiUploadProducts, createProduct)
   router.post('/constructor', multiUploadConstructor, createConstructor)
   router.get('/constructor-by', constructorByName)
@@ -126,6 +71,10 @@ export function createCabinetRouter() {
   router.post('/my-archive-hub', createMyArchiveHub)
   router.get('/my-archive-hubs', myArchiveHubs)
   router.get('/my-archive-hub-by', myArchiveHubById)
+
+  router.post('/my-constructorr', createMyConstructorr)
+  router.get('/my-constructorrs', myConstructorrs)
+  router.get('/my-constructorr-by', myConstructorrById)
 
   router.post('/my-constructor-designer', createMyConstructorDesigner)
   router.get('/my-constructor-designers', myConstructorDesigners)
