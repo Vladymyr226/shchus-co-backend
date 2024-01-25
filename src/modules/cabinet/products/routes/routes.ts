@@ -23,6 +23,8 @@ import { createMyConstructorIdea } from '../../my-constructor-ideas/controllers/
 import { myConstructorIdeas } from '../../my-constructor-ideas/controllers/my-constructor-ideas.controller'
 import { createMyConstructorr } from '../../constructorr/my-constructorr.controller'
 import { myConstructorrs, myConstructorrById } from '../../constructorr/my-constructorrs.controller'
+import { createMyConstructorMillion } from '../../my-constructor-million/controllers/my-constructor-million.controller'
+import { myConstructorMillions } from '../../my-constructor-million/controllers/my-constructor-millions.controller'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -87,6 +89,9 @@ export function createCabinetRouter() {
 
   router.post('/my-constructor-idea', createMyConstructorIdea)
   router.get('/my-constructor-ideas', myConstructorIdeas)
+
+  router.post('/my-constructor-million', createMyConstructorMillion)
+  router.get('/my-constructor-millions', myConstructorMillions)
 
   return router
 }
