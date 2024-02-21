@@ -2,12 +2,49 @@ import { Response } from 'express'
 import db from '../../../../db/knexKonfig'
 
 export async function createMyConstructorDesigner(req, res: Response) {
-  const { lorem0, lorem1, lorem2, lorem3, lorem4, selectedOption, lorem5, lorem6, lorem7, lorem8 } =
-    req.body
+  const { lorem51, lorem52 } = req.body
 
   const linksArray = req.body.fileUrls
 
   const myConstructorDesignerToDB = {
+    lorem_1: lorem51 as string,
+    lorem_2: lorem52 as string,
+
+    img_file0: linksArray[0] || '',
+  }
+
+  try {
+    const newItem = await db('constructor_designer')
+      .insert(myConstructorDesignerToDB)
+      .returning('*')
+    console.log(newItem)
+
+    return res.status(201).json({ newItem })
+  } catch (error) {
+    console.error('Error in my-constructor-designer.controller', error)
+    return res.status(400).json({ message: error })
+  }
+}
+
+export async function createMyConstructorDesignerItems(req, res: Response) {
+  const {
+    id,
+    lorem0,
+    lorem1,
+    lorem2,
+    lorem3,
+    lorem4,
+    selectedOption,
+    lorem5,
+    lorem6,
+    lorem7,
+    lorem8,
+  } = req.body
+
+  const linksArray = req.body.fileUrls
+
+  const myConstructorDesignerItemsToDB = {
+    constructor_designer_id: id as string,
     lorem_0: lorem0 as string,
     lorem_1: lorem1 as string,
     lorem_2: lorem2 as string,
@@ -27,8 +64,8 @@ export async function createMyConstructorDesigner(req, res: Response) {
   }
 
   try {
-    const newItem = await db('constructor_designer')
-      .insert(myConstructorDesignerToDB)
+    const newItem = await db('constructor_designer_items')
+      .insert(myConstructorDesignerItemsToDB)
       .returning('*')
     console.log(newItem)
 

@@ -17,7 +17,10 @@ export async function myConstructorrById(req: Request, res: Response) {
   const { id } = req.query
 
   try {
-    const constructorrById = await db.select('*').from('constructorr').where('id', id)
+    const constructorrById = await db
+      .select('*')
+      .from('constructorr_items')
+      .where('constructorr_id', id)
 
     return res.status(200).json({ constructorrById })
   } catch (error) {

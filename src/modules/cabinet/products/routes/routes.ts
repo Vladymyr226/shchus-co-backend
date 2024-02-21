@@ -13,18 +13,29 @@ import {
   myArchiveHubs,
 } from '../../my-archive-hub/controllers/my-archive-hubs.controller'
 import { createMyArchiveHub } from '../../my-archive-hub/controllers/my-archive-hub.controller'
-import { myConstructorDesigners } from '../../my-constructor-designers/controllers/my-constructor-designers.controller'
-import { createMyConstructorDesigner } from '../../my-constructor-designers/controllers/my-constructor-designer.controller'
+import {
+  myConstructorDesignerById,
+  myConstructorDesigners,
+} from '../../my-constructor-designers/controllers/my-constructor-designers.controller'
+import {
+  createMyConstructorDesigner,
+  createMyConstructorDesignerItems,
+} from '../../my-constructor-designers/controllers/my-constructor-designer.controller'
 import { createMyConstructorStartup } from '../../my-constructor-startups/controllers/my-constructor-startup.controller'
 import { myConstructorStartups } from '../../my-constructor-startups/controllers/my-constructor-startups.controller'
 import { createMyConstructorTalent } from '../../my-constructor-talents/controllers/my-constructor-talent.controller'
 import { myConstructorTalents } from '../../my-constructor-talents/controllers/my-constructor-talents.controller'
 import { createMyConstructorIdea } from '../../my-constructor-ideas/controllers/my-constructor-idea.controller'
 import { myConstructorIdeas } from '../../my-constructor-ideas/controllers/my-constructor-ideas.controller'
-import { createMyConstructorr } from '../../constructorr/my-constructorr.controller'
+import {
+  createMyConstructorr,
+  createMyConstructorrItems,
+} from '../../constructorr/my-constructorr.controller'
 import { myConstructorrs, myConstructorrById } from '../../constructorr/my-constructorrs.controller'
 import { createMyConstructorMillion } from '../../my-constructor-million/controllers/my-constructor-million.controller'
 import { myConstructorMillions } from '../../my-constructor-million/controllers/my-constructor-millions.controller'
+import { createMySldc } from '../../my-sldc/controllers/my-sldc.controller'
+import { mySldces } from '../../my-sldc/controllers/my-sldces.controller'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -62,6 +73,9 @@ export function createCabinetRouter() {
   router.post('/constructor', multiUploadConstructor, createConstructor)
   router.get('/constructor-by', constructorByName)
 
+  router.post('/my-sldc', createMySldc)
+  router.get('/my-sldces', mySldces)
+
   // cb ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   router.post('/my-about-bureau', createMyAboutBureau)
@@ -75,11 +89,14 @@ export function createCabinetRouter() {
   router.get('/my-archive-hub-by', myArchiveHubById)
 
   router.post('/my-constructorr', createMyConstructorr)
+  router.post('/my-constructorr-items', createMyConstructorrItems)
   router.get('/my-constructorrs', myConstructorrs)
   router.get('/my-constructorr-by', myConstructorrById)
 
   router.post('/my-constructor-designer', createMyConstructorDesigner)
+  router.post('/my-constructor-designer-items', createMyConstructorDesignerItems)
   router.get('/my-constructor-designers', myConstructorDesigners)
+  router.post('/my-constructor-designer-by', myConstructorDesignerById)
 
   router.post('/my-constructor-startup', createMyConstructorStartup)
   router.get('/my-constructor-startups', myConstructorStartups)
