@@ -96,7 +96,7 @@ export function createCabinetRouter() {
   router.post('/my-constructor-designer', createMyConstructorDesigner)
   router.post('/my-constructor-designer-items', createMyConstructorDesignerItems)
   router.get('/my-constructor-designers', myConstructorDesigners)
-  router.post('/my-constructor-designer-by', myConstructorDesignerById)
+  router.get('/my-constructor-designer-by', myConstructorDesignerById)
 
   router.post('/my-constructor-startup', createMyConstructorStartup)
   router.get('/my-constructor-startups', myConstructorStartups)
