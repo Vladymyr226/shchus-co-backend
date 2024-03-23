@@ -36,6 +36,16 @@ import { createMyConstructorMillion } from '../../my-constructor-million/control
 import { myConstructorMillions } from '../../my-constructor-million/controllers/my-constructor-millions.controller'
 import { createMySldc } from '../../my-sldc/controllers/my-sldc.controller'
 import { mySldces } from '../../my-sldc/controllers/my-sldces.controller'
+import { createMySlBrain } from '../../my-sl-brain/controllers/my-sl-brain.controller'
+import { mySlBrains } from '../../my-sl-brain/controllers/my-sl-brains.controller'
+import { createMySlFood } from '../../my-sl-food/controllers/my-sl-food.controller'
+import { mySlFoods } from '../../my-sl-food/controllers/my-sl-foods.controller'
+import { createMySlWisdom } from '../../my-sl-wisdom/controllers/my-sl-wisdom.controller'
+import { mySlWisdoms } from '../../my-sl-wisdom/controllers/my-sl-wisdoms.controller'
+import { createMySlTimeOfLife } from '../../my-sl-time-of-life/controllers/my-sl-time-of-life.controller'
+import { mySlTimeOfLifes } from '../../my-sl-time-of-life/controllers/my-sl-time-of-lifes.controller'
+import { createMySlSport } from '../../my-sl-sport/controllers/my-sl-sport.controller'
+import { mySlSports } from '../../my-sl-sport/controllers/my-sl-sports.controller'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -109,6 +119,23 @@ export function createCabinetRouter() {
 
   router.post('/my-constructor-million', createMyConstructorMillion)
   router.get('/my-constructor-millions', myConstructorMillions)
+
+  // cb-sl ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  router.post('/my-sl-time-of-life', createMySlTimeOfLife)
+  router.get('/my-sl-time-of-lifes', mySlTimeOfLifes)
+
+  router.post('/my-sl-sport', createMySlSport)
+  router.get('/my-sl-sports', mySlSports)
+
+  router.post('/my-sl-food', createMySlFood)
+  router.get('/my-sl-foods', mySlFoods)
+
+  router.post('/my-sl-brain', createMySlBrain)
+  router.get('/my-sl-brains', mySlBrains)
+
+  router.post('/my-sl-wisdom', createMySlWisdom)
+  router.get('/my-sl-wisdoms', mySlWisdoms)
 
   return router
 }
