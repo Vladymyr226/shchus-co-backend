@@ -46,6 +46,8 @@ import { createMySlTimeOfLife } from '../../my-sl-time-of-life/controllers/my-sl
 import { mySlTimeOfLifes } from '../../my-sl-time-of-life/controllers/my-sl-time-of-lifes.controller'
 import { createMySlSport } from '../../my-sl-sport/controllers/my-sl-sport.controller'
 import { mySlSports } from '../../my-sl-sport/controllers/my-sl-sports.controller'
+import { createMyBlog } from '../../my-blog/controllers/my-blog.controller'
+import { myBlogById, myBlogs } from '../../my-blog/controllers/my-blogs.controller'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -136,6 +138,12 @@ export function createCabinetRouter() {
 
   router.post('/my-sl-wisdom', createMySlWisdom)
   router.get('/my-sl-wisdoms', mySlWisdoms)
+
+  //blog ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  router.post('/my-blog', createMyBlog)
+  router.get('/my-blogs', myBlogs)
+  router.get('/my-blog-by', myBlogById)
 
   return router
 }
