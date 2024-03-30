@@ -26,10 +26,27 @@ export async function createMyBlog(req, res: Response) {
     video_file2: linksArray[6] || '',
     video_file3: linksArray[7] || '',
   }
-  
 
   try {
     const newItem = await db('blog').insert(myBlogToDB).returning('*')
+    console.log(newItem)
+
+    return res.status(201).json({ message: 'OK' })
+  } catch (error) {
+    console.error('Error in my-blog.controller', error)
+    return res.status(400).json({ message: error })
+  }
+}
+
+export async function createMyBlogViewCount(req, res: Response) {
+  const { id } = req.body
+
+  const myBlogViewCountToDB = {
+    post_id: id as string,
+  }
+
+  try {
+    const newItem = await db('blog_viewcount').insert(myBlogViewCountToDB).returning('*')
     console.log(newItem)
 
     return res.status(201).json({ message: 'OK' })
