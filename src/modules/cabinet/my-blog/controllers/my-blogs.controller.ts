@@ -30,11 +30,16 @@ export async function myBlogViewCount(req: Request, res: Response) {
   const { id } = req.query
 
   try {
-    const blog = await db.select('*').from('blog_viewcount').where('post_id', id)
+    const blogCounts = await db('blog_viewcount')
+      .count('id as count')
+      .where('post_id', id)
+      .groupBy('post_id')
+      .orderBy('count', 'desc')
+      .first()
 
-    const lastBlog = blog.length > 0 ? blog[blog.length - 1] : null
+    const maxCount = blogCounts ? blogCounts.count : 0
 
-    return res.status(200).json({ lastBlog })
+    return res.status(200).json({ maxCount })
   } catch (error) {
     console.error('Error in my-blogs.controller', error)
     return res.status(500).json({ message: 'Internal Server Error' })
