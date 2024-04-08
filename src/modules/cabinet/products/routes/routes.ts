@@ -46,8 +46,19 @@ import { createMySlTimeOfLife } from '../../my-sl-time-of-life/controllers/my-sl
 import { mySlTimeOfLifes } from '../../my-sl-time-of-life/controllers/my-sl-time-of-lifes.controller'
 import { createMySlSport } from '../../my-sl-sport/controllers/my-sl-sport.controller'
 import { mySlSports } from '../../my-sl-sport/controllers/my-sl-sports.controller'
-import { createMyBlog, createMyBlogViewCount } from '../../my-blog/controllers/my-blog.controller'
-import { myBlogById, myBlogViewCount, myBlogs } from '../../my-blog/controllers/my-blogs.controller'
+import {
+  createMyBlog,
+  createMyBlogViewCount,
+  myBlogPostFeatured,
+} from '../../my-blog/controllers/my-blog.controller'
+import {
+  myBlogById,
+  myBlogPostIsFeatured,
+  myBlogViewCount,
+  myBlogs,
+} from '../../my-blog/controllers/my-blogs.controller'
+import { createMyDBS500Club } from '../../my-dbs-500-club/controllers/my-dbs-500-club.controller'
+import { myDBS500Clubs } from '../../my-dbs-500-club/controllers/my-dbs-500-clubs.controller'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -144,8 +155,13 @@ export function createCabinetRouter() {
   router.post('/my-blog', createMyBlog)
   router.get('/my-blogs', myBlogs)
   router.get('/my-blog-by', myBlogById)
-  router.post('/my-blog/viewcount', createMyBlogViewCount)
-  router.get('/my-blog/viewcount', myBlogViewCount)
+  router.post('/my-blog/view-count', createMyBlogViewCount)
+  router.get('/my-blog/view-count', myBlogViewCount)
+  router.post('/my-blog/post-featured', myBlogPostFeatured)
+  router.post('/my-blog/post-is-featured', myBlogPostIsFeatured)
+
+  router.post('/my-dbs-500-club', createMyDBS500Club)
+  router.get('/my-dbs-500-clubs', myDBS500Clubs)
 
   return router
 }

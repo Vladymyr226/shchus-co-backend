@@ -41,12 +41,33 @@ export async function createMyBlog(req, res: Response) {
 export async function createMyBlogViewCount(req, res: Response) {
   const { id } = req.body
 
+  console.log(id)
+
   const myBlogViewCountToDB = {
     post_id: id as string,
   }
 
   try {
     const newItem = await db('blog_viewcount').insert(myBlogViewCountToDB).returning('*')
+    console.log(newItem)
+    return res.status(201).json({ message: 'OK' })
+  } catch (error) {
+    console.error('Error in my-blog.controller', error)
+    return res.status(400).json({ message: error })
+  }
+}
+
+export async function myBlogPostFeatured(req, res: Response) {
+  const { userId, postId, isFeaturedPost } = req.body
+
+  const myFeaturedPostToDB = {
+    user_id: userId as number,
+    post_id: postId as number,
+    is_featured_post: isFeaturedPost as boolean,
+  }
+
+  try {
+    const newItem = await db('featured_posts').insert(myFeaturedPostToDB).returning('*')
     console.log(newItem)
 
     return res.status(201).json({ message: 'OK' })
