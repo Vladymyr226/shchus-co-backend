@@ -59,11 +59,19 @@ import {
 } from '../../my-blog/controllers/my-blogs.controller'
 import { createMyDBS500Club } from '../../my-dbs-500-club/controllers/my-dbs-500-club.controller'
 import { myDBS500Clubs } from '../../my-dbs-500-club/controllers/my-dbs-500-clubs.controller'
-import { createMyDBS500ClubIdea } from '../../my-dbs-500-club/ideas/controllers/idea.controller'
+import {
+  createMyDBS500ClubIdea,
+  createMyDBS500ClubIdeaItems,
+} from '../../my-dbs-500-club/ideas/controllers/idea.controller'
 import {
   myDBS500ClubIdeaById,
   myDBS500ClubIdeas,
 } from '../../my-dbs-500-club/ideas/controllers/ideas.controller'
+import {
+  createMyWorkshop,
+  createMyWorkshopItems,
+} from '../../workshop/controllers/workshop.controller'
+import { myWorkshopById, myWorkshops } from '../../workshop/controllers/workshops.controller'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -165,15 +173,22 @@ export function createCabinetRouter() {
   router.post('/my-blog/post-featured', myBlogPostFeatured)
   router.post('/my-blog/post-is-featured', myBlogPostIsFeatured)
 
+  //workshop ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  router.post('/workshop', createMyWorkshop)
+  router.post('/workshop-items', createMyWorkshopItems)
+  router.get('/workshops', myWorkshops)
+  router.get('/workshop-by', myWorkshopById)
+
   //club DBS-500 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
   router.post('/my-dbs-500-club', createMyDBS500Club)
   router.get('/my-dbs-500-clubs', myDBS500Clubs)
 
   router.post('/my-dbs-500-club/idea', createMyDBS500ClubIdea)
+  router.post('/my-dbs-500-club/idea-items', createMyDBS500ClubIdeaItems)
   router.get('/my-dbs-500-clubs/ideas', myDBS500ClubIdeas)
   router.get('/my-dbs-500-club/idea-by', myDBS500ClubIdeaById)
-
   router.delete('/my-dbs-500-club/idea', createMyDBS500Club)
   router.put('/my-dbs-500-clubs/idea', myDBS500Clubs)
 

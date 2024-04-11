@@ -2,12 +2,36 @@ import { Response } from 'express'
 import db from '../../../../../db/knexKonfig'
 
 export async function createMyDBS500ClubIdea(req, res: Response) {
-  const { userId, lorem0, lorem1, lorem2, lorem3, lorem4, lorem5 } = req.body
+  const { lorem51, lorem52 } = req.body
 
   const linksArray = req.body.fileUrls
 
   const myDBS500ClubIdeaToDB = {
+    lorem_1: lorem51 as string,
+    lorem_2: lorem52 as string,
+
+    img_file0: linksArray[0] || '',
+  }
+
+  try {
+    const newItem = await db('dbs_500_club_idea').insert(myDBS500ClubIdeaToDB).returning('*')
+    console.log(newItem)
+
+    return res.status(201).json({ newItem })
+  } catch (error) {
+    console.error('Error in idea.controller', error)
+    return res.status(400).json({ message: error })
+  }
+}
+
+export async function createMyDBS500ClubIdeaItems(req, res: Response) {
+  const { id, userId, lorem0, lorem1, lorem2, lorem3, lorem4, lorem5 } = req.body
+
+  const linksArray = req.body.fileUrls
+
+  const myDBS500ClubIdeaItemsToDB = {
     user_id: userId as string,
+    dbs_500_club_idea_id: id as string,
     lorem_0: lorem0 as string,
     lorem_1: lorem1 as string,
     lorem_2: lorem2 as string,
@@ -20,7 +44,9 @@ export async function createMyDBS500ClubIdea(req, res: Response) {
   }
 
   try {
-    const newItem = await db('dbs_500_club_idea').insert(myDBS500ClubIdeaToDB).returning('*')
+    const newItem = await db('dbs_500_club_idea_items')
+      .insert(myDBS500ClubIdeaItemsToDB)
+      .returning('*')
     console.log(newItem)
 
     return res.status(201).json({ message: 'OK' })

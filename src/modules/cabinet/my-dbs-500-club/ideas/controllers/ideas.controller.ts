@@ -17,7 +17,10 @@ export async function myDBS500ClubIdeaById(req: Request, res: Response) {
   const { id } = req.query
 
   try {
-    const myDBS500ClubIdeaById = await db.select('*').from('dbs_500_club_idea').where('id', id)
+    const myDBS500ClubIdeaById = await db
+      .select('*')
+      .from('dbs_500_club_idea_items')
+      .where('dbs_500_club_idea_id', id)
 
     return res.status(200).json({ myDBS500ClubIdeaById })
   } catch (error) {
