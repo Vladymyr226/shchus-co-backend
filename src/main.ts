@@ -11,8 +11,54 @@ import { createProductsRouter } from './modules/product/routes/product'
 import multer from 'multer'
 const winston = require('winston')
 const { createLogger, transports, format } = winston
+const http = require('http')
+const { Server } = require('socket.io')
+const path = require('path')
+const fs = require('fs')
 
 const app = express()
+
+//chat for users
+const server = http.createServer(app)
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+  },
+})
+
+io.on('connection', (socket) => {
+  console.log('a user connected')
+
+  socket.on('CHAT_MESSAGE', ({ message }) => {
+    console.log(message)
+    io.emit('CHAT_UPDATE', { message })
+  })
+
+  socket.on('file-upload', ({ fileData, fileName }) => {
+    const uniqueFileName = fileName
+
+    console.log(__dirname)
+    const filePath = path.join(__dirname, 'uploads', uniqueFileName)
+
+    fs.writeFile(filePath, fileData, 'base64', (err) => {
+      if (err) {
+        console.error('Ошибка при сохранении файла:', err)
+        return
+      }
+      console.log('Файл успешно сохранен:', filePath)
+
+      // const fileUrl = `http://localhost:4000/src/uploads/${uniqueFileName}`
+      const fileUrl = `http://localhost:4000/src/uploads/bmw.jpg`
+
+      socket.emit('file-download', fileUrl)
+    })
+  })
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected')
+  })
+})
 
 // Создаем транспорт, который записывает журналы в файл
 // const fileTransport = new transports.File({
@@ -100,6 +146,10 @@ app.use((error: any, req: Request, res: Response) => {
       return res.status(400).json({ message: 'File must be an image/mp4/pdf type' })
     }
   }
+})
+
+server.listen(4001, () => {
+  console.log(`Server listening at http://localhost:4001`)
 })
 
 app.listen(process.env.PORT, () => {
