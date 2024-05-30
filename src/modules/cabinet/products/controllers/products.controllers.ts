@@ -1,6 +1,5 @@
 import { Response } from 'express'
 import db from '../../../../db/knexKonfig'
-import { uploadFileToS3 } from '../../../../helper/helper'
 
 interface ProductInfo {
   user_id: string
@@ -42,8 +41,8 @@ export async function createProduct(req, res: Response) {
     }
 
     try {
-      const location = await uploadFileToS3(uploadParams)
-      arrFiles.push(location)
+      // const location = await uploadFileToS3(uploadParams)
+      // arrFiles.push(location)
     } catch (error) {
       console.log('Error in products.controller.ts: ', error)
     }

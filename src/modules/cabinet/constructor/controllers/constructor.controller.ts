@@ -1,6 +1,5 @@
 import { Response } from 'express'
 import db from '../../../../db/knexKonfig'
-import { uploadFileToS3 } from '../../../../helper/helper'
 
 export async function createConstructor(req, res: Response) {
   const {
@@ -53,8 +52,8 @@ export async function createConstructor(req, res: Response) {
       ACL: 'public-read',
     }
     try {
-      const location = await uploadFileToS3(uploadParams)
-      arrFiles.push(location)
+      // const location = await uploadFileToS3(uploadParams)
+      // arrFiles.push(location)
     } catch (error) {
       console.log('Error in constructor.controller.ts: ', error)
     }

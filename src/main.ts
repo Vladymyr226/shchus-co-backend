@@ -5,20 +5,18 @@ import cors from 'cors'
 import { Router } from 'express'
 import { createPaymentRouter } from './modules/payment/routes/payment'
 import { errorHandlerMiddleware } from './middleware/error.middleware'
-import './configs/dotenv.config'
 import { createCabinetRouter } from './modules/cabinet/products/routes/routes'
 import { createProductsRouter } from './modules/product/routes/product'
-import multer from 'multer'
-const winston = require('winston')
-const { createLogger, transports, format } = winston
+import './configs/dotenv.config'
 const http = require('http')
 const { Server } = require('socket.io')
 const path = require('path')
 const fs = require('fs')
+const swaggerUi = require('swagger-ui-express')
+const swaggerSpec = require('../swagger.js')
 
 const app = express()
 
-//chat for users
 const server = http.createServer(app)
 
 const io = new Server(server, {
@@ -60,37 +58,6 @@ io.on('connection', (socket) => {
   })
 })
 
-// Создаем транспорт, который записывает журналы в файл
-// const fileTransport = new transports.File({
-//   filename: 'server.log',
-// })
-
-// Создаем логгер и добавляем к нему транспорт файлового журнала
-// const logger = createLogger({
-//   level: 'info',
-//   format: format.combine(format.timestamp(), format.json()),
-//   transports: [fileTransport],
-// })
-
-// Middleware для записи запросов в журнал
-// app.use((req, res, next) => {
-//   logger.info({
-//     method: req.method,
-//     path: req.path,
-//     ip: req.ip,
-//     headers: req.headers,
-//   })
-//   next()
-// })
-
-// app.use((err, req, res, next) => {
-//   logger.error({
-//     message: err.message,
-//     stack: err.stack,
-//   })
-//   res.status(500).send('Something went wrong')
-// })
-
 app.use(express.json())
 
 app.use(
@@ -109,11 +76,10 @@ app.use(
   //   credentials: true,
   // }
 )
-
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-function addApiCoRoutes() {
+function addApiRoutes() {
   const router = Router({ mergeParams: true })
 
   router.use('/auth', createAuthRouter())
@@ -124,7 +90,7 @@ function addApiCoRoutes() {
   return router
 }
 
-app.use('/api', addApiCoRoutes())
+app.use('/api', addApiRoutes())
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json('Health check works!')
@@ -132,21 +98,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use(errorHandlerMiddleware)
 
-app.use((error: any, req: Request, res: Response) => {
-  if (error instanceof multer.MulterError) {
-    if (error.code === 'LIMIT_FILE_SIZE') {
-      return res.status(400).json({ message: 'File too large' })
-    }
-
-    if (error.code === 'LIMIT_FILE_COUNT') {
-      return res.status(400).json({ message: 'Too many files' })
-    }
-
-    if (error.code === 'LIMIT_UNEXPECTED_FILE') {
-      return res.status(400).json({ message: 'File must be an image/mp4/pdf type' })
-    }
-  }
-})
+// Настройка маршрута для Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
 server.listen(4001, () => {
   console.log(`Server listening at http://localhost:4001`)
@@ -154,6 +107,7 @@ server.listen(4001, () => {
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening at http://localhost:${process.env.PORT}`)
+  console.log(`Swagger UI available at http://localhost:${process.env.PORT}/api-docs`)
 })
 
 export default app
