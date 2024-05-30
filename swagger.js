@@ -1,4 +1,3 @@
-// swagger.js
 const swaggerJSDoc = require('swagger-jsdoc')
 
 const options = {
@@ -34,7 +33,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/modules/auth/routes/*.ts'], // Путь к файлам с JSDoc комментариями
+  apis: ['./src/modules/auth/routes/*.ts'],
 }
 
 const swaggerSpec = swaggerJSDoc(options)

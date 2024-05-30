@@ -1,6 +1,13 @@
 import { Response } from 'express'
 import { ValidationError } from 'joi'
-import { HttpStatusCode } from '../errors'
+
+export enum HttpStatusCode {
+  OK = 200,
+  BAD_REQUEST = 400,
+  UNAUTHORIZED = 401,
+  NOT_FOUND = 404,
+  INTERNAL_SERVER = 500,
+}
 
 export async function errorHandlerMiddleware(err: any, res: Response) {
   let statusCode = err.status || 500

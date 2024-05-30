@@ -96,7 +96,7 @@ app.get('/', (req: Request, res: Response) => {
   res.status(200).json('Health check works!')
 })
 
-app.use(errorHandlerMiddleware)
+// app.use(errorHandlerMiddleware)
 
 // Настройка маршрута для Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
