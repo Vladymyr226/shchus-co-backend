@@ -2,8 +2,12 @@ import { Router } from 'express'
 import { createProduct } from '../controllers/products.controllers'
 import { createConstructor } from '../../constructor/controllers/constructor.controller'
 import { constructorByName } from '../../constructor/controllers/constructors.controller'
-import { createMyAboutBureau } from '../../my-about-bureau/controllers/my-about-bureau.controller'
-import { myAboutBureaus } from '../../my-about-bureau/controllers/my-about-bureaus.controller'
+import {
+  createMyAboutBureau,
+  deleteMyAboutBureau,
+  myAboutBureaus,
+  updateMyAboutBureau,
+} from '../../my-about-bureau/controllers/my-about-bureau.controller'
 import { createMyAboutShchus } from '../../my-about-shchus/controllers/my-about-shchus.controller'
 import { myAboutShchuses } from '../../my-about-shchus/controllers/my-about-shchuses.controller'
 import {
@@ -85,6 +89,8 @@ export function createCabinetRouter() {
 
   router.post('/my-about-bureau', createMyAboutBureau)
   router.get('/my-about-bureaus', myAboutBureaus)
+  router.put('/my-about-bureau', updateMyAboutBureau)
+  router.delete('/my-about-bureau', deleteMyAboutBureau)
 
   router.post('/my-about-shchus', createMyAboutShchus)
   router.get('/my-about-shchuses', myAboutShchuses)
