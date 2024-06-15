@@ -9,6 +9,10 @@ export enum HttpStatusCode {
   INTERNAL_SERVER = 500,
 }
 
+export const CREATED = 'CREATED'
+export const UPDATED = 'UPDATED'
+export const DELETED = 'DELETED'
+
 export async function errorHandlerMiddleware(err: any, res: Response) {
   let statusCode = err.status || 500
 

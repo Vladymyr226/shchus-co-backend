@@ -5,9 +5,9 @@ import cors from 'cors'
 import { Router } from 'express'
 import { createPaymentRouter } from './modules/payment/routes/payment'
 import { errorHandlerMiddleware } from './middleware/error.middleware'
-import { createCabinetRouter } from './modules/cabinet/products/routes/routes'
 import { createProductsRouter } from './modules/product/routes/product'
 import './configs/dotenv.config'
+import { createCabinetRouter } from './modules/routes/routes'
 const http = require('http')
 const { Server } = require('socket.io')
 const path = require('path')
@@ -46,7 +46,6 @@ io.on('connection', (socket) => {
       }
       console.log('Файл успешно сохранен:', filePath)
 
-      // const fileUrl = `http://localhost:4000/src/uploads/${uniqueFileName}`
       const fileUrl = `http://localhost:4000/src/uploads/bmw.jpg`
 
       socket.emit('file-download', fileUrl)
@@ -100,13 +99,13 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-server.listen(4001, () => {
-  console.log(`Server listening at http://localhost:4001`)
+server.listen(4002, () => {
+  console.log(`Server listening at http://localhost:4002`)
 })
 
 app.listen(process.env.PORT, () => {
   console.log(`Server listening at http://localhost:${process.env.PORT}`)
-  console.log(`Swagger UI available at http://localhost:${process.env.PORT}/api-docs`)
+  // console.log(`Swagger UI available at http://localhost:${process.env.PORT}/api-docs`)
 })
 
 export default app
