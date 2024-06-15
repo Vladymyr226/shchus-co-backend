@@ -76,6 +76,11 @@ import {
   createMyWorkshopItems,
 } from '../cabinet/workshop/controllers/workshop.controller'
 import { myWorkshops, myWorkshopById } from '../cabinet/workshop/controllers/workshops.controller'
+import {
+  createMyIndustrialHubTools,
+  myIndustrialHubTools,
+  updateMyIndustrialHubTools,
+} from '../cabinet/controllers/my-industrial-hub/my-tools.controller'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -167,6 +172,12 @@ export function createCabinetRouter() {
   router.get('/my-dbs-500-club/idea-by', myDBS500ClubIdeaById)
   router.delete('/my-dbs-500-club/idea', createMyDBS500Club)
   router.put('/my-dbs-500-clubs/idea', myDBS500Clubs)
+
+  // industrial-hub ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+  router.post('/my-industrial-hub-tools', createMyIndustrialHubTools)
+  router.get('/my-industrial-hub-tools', myIndustrialHubTools)
+  router.put('/my-industrial-hub-tools', updateMyIndustrialHubTools)
 
   return router
 }
