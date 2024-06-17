@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import db from '../../../db/knexKonfig'
-import { CREATED, DELETED, UPDATED } from '../../../middleware/error.middleware'
+import { CREATED, UPDATED } from '../../../middleware/error.middleware'
 
 export async function createMyAboutBureau(req, res: Response) {
   const json = req.body

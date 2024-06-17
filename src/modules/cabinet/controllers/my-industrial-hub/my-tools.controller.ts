@@ -16,11 +16,11 @@ export async function createMyIndustrialHubTools(req, res: Response) {
   }
 }
 
-export async function myIndustrialHubTools(req: Request, res: Response) {
+export async function getMyIndustrialHubTools(req: Request, res: Response) {
   try {
-    const myIndustrialHubTools = await db.select('*').from('my_industrial_hub_tools')
+    const getMyIndustrialHubTools = await db.select('*').from('my_industrial_hub_tools')
 
-    return res.status(200).json({ myIndustrialHubTools })
+    return res.status(200).json({ getMyIndustrialHubTools })
   } catch (error) {
     console.error('Error in my-tools.controller.ts', error)
     return res.status(500).json({ message: 'Internal Server Error' })
