@@ -4,19 +4,15 @@ import { createAuthRouter } from './modules/auth/routes/users'
 import cors from 'cors'
 import { Router } from 'express'
 import { createPaymentRouter } from './modules/payment/routes/payment'
-import { errorHandlerMiddleware } from './middleware/error.middleware'
-import { createProductsRouter } from './modules/product/routes/product'
 import './configs/dotenv.config'
-import { createCabinetRouter } from './modules/routes/routes'
-const http = require('http')
-const { Server } = require('socket.io')
-const path = require('path')
-const fs = require('fs')
-const swaggerUi = require('swagger-ui-express')
-const swaggerSpec = require('../swagger.js')
+import { createCabinetRouter } from './modules/cabinet/shchus/routes/routes'
+import { errorHandlerMiddleware } from './middleware/error.middleware'
+import path from 'path'
+import fs from 'fs'
+import http from 'http'
+import { Server } from 'socket.io'
 
 const app = express()
-
 const server = http.createServer(app)
 
 const io = new Server(server, {
@@ -26,7 +22,7 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) => {
-  console.log('a user connected')
+  console.log('A user connected')
 
   socket.on('CHAT_MESSAGE', ({ message }) => {
     console.log(message)
@@ -34,56 +30,44 @@ io.on('connection', (socket) => {
   })
 
   socket.on('file-upload', ({ fileData, fileName }) => {
-    const uniqueFileName = fileName
+    const uniqueFileName = `${Date.now()}-${fileName}`
+    const uploadDir = path.join(__dirname, 'uploads')
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir)
+    }
 
-    console.log(__dirname)
-    const filePath = path.join(__dirname, 'uploads', uniqueFileName)
+    const filePath = path.join(uploadDir, uniqueFileName)
 
     fs.writeFile(filePath, fileData, 'base64', (err) => {
       if (err) {
         console.error('Ошибка при сохранении файла:', err)
+        socket.emit('file-error', 'Ошибка при сохранении файла')
         return
       }
       console.log('Файл успешно сохранен:', filePath)
 
-      const fileUrl = `http://localhost:4000/src/uploads/bmw.jpg`
+      const fileUrl = `http://localhost:${process.env.PORT || 4002}/uploads/${uniqueFileName}`
 
       socket.emit('file-download', fileUrl)
     })
   })
 
   socket.on('disconnect', () => {
-    console.log('user disconnected')
+    console.log('User disconnected')
   })
 })
 
 app.use(express.json())
-
-app.use(
-  cors()
-  // {
-  //   origin: [
-  //     /www.shchus.co/,
-  //     /shchus.co/,
-  //     /shchus-co.vercel.app/,
-  //     /cb-shchus.vercel.app/,
-  //     /http:\/\/localhost.*/,
-  //     /http:\/\/172.*/,
-  //     /http:\/\/192.*/,
-  //     /http:\/\/54.154.216.60/,
-  //   ],
-  //   credentials: true,
-  // }
-)
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 function addApiRoutes() {
   const router = Router({ mergeParams: true })
 
   router.use('/auth', createAuthRouter())
   router.use('/cabinet', createCabinetRouter())
-  router.use('/products', createProductsRouter())
   router.use('/payment', createPaymentRouter())
 
   return router
@@ -95,17 +79,10 @@ app.get('/', (req: Request, res: Response) => {
   res.status(200).json('Health check works!')
 })
 
-// app.use(errorHandlerMiddleware)
+app.use(errorHandlerMiddleware)
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-
-server.listen(4002, () => {
-  console.log(`Server listening at http://localhost:4002`)
-})
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server listening at http://localhost:${process.env.PORT}`)
-  // console.log(`Swagger UI available at http://localhost:${process.env.PORT}/api-docs`)
+server.listen(process.env.PORT || 4002, () => {
+  console.log(`Server listening at http://localhost:${process.env.PORT || 4002}`)
 })
 
 export default app
