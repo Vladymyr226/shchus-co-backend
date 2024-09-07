@@ -4,7 +4,12 @@ const { PG_CONNECTION_STRING } = process.env
 
 const config = {
   client: 'postgresql',
-  connection: PG_CONNECTION_STRING,
+  connection: {
+    connectionString: PG_CONNECTION_STRING,
+    ssl: {
+      rejectUnauthorized: false, // Для упрощения можно отключить проверку сертификата
+    },
+  },
   pool: {
     min: 2,
     max: 10,
