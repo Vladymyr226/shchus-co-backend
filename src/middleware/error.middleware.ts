@@ -23,12 +23,5 @@ export async function errorHandlerMiddleware(err: any, res: Response) {
     message = err.details[0].message
   }
 
-  const errorDetails = {
-    error: err.message,
-    stack: err.stack,
-  }
-
-  console.error('Error in errorHandlerMiddleware:', errorDetails)
-
   res.status(statusCode).json({ message })
 }
