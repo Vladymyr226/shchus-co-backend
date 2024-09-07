@@ -6,7 +6,7 @@ export async function createMyAboutBureau(req, res: Response) {
   const json = req.body
 
   try {
-    const newItem = await db('about_bureau').insert({ data: json }).returning('*')
+    const newItem = await db('my_about_bureau').insert({ data: json }).returning('*')
     console.log(newItem)
 
     return res.status(201).json({ message: CREATED })
@@ -18,7 +18,7 @@ export async function createMyAboutBureau(req, res: Response) {
 
 export async function myAboutBureaus(req: Request, res: Response) {
   try {
-    const myAboutBureaus = await db.select('*').from('about_bureau')
+    const myAboutBureaus = await db.select('*').from('my_about_bureau')
 
     return res.status(200).json({ myAboutBureaus })
   } catch (error) {
@@ -31,7 +31,7 @@ export async function updateMyAboutBureau(req: Request, res: Response) {
   const newJson = req.body
 
   try {
-    await db.table('about_bureau').update({ data: newJson })
+    await db.table('my_about_bureau').update({ data: newJson })
 
     return res.status(200).json({ message: UPDATED })
   } catch (error) {
