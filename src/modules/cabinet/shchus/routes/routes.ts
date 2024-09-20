@@ -8,6 +8,7 @@ import {
   createMyMessageToPeople,
   createMyMessageToPeopleModal,
   getMyMessageToPeople,
+  getMyMessageToPeopleModal,
   updateMyMessageToPeople,
 } from '../controllers/message-from-shchus/message-to-people'
 import {
@@ -37,6 +38,7 @@ export function createCabinetRouter() {
 
   router.post('/my-message-to-people', createMyMessageToPeople)
   router.post('/my-message-to-people-modal', createMyMessageToPeopleModal)
+  router.get('/my-message-to-people-modal', getMyMessageToPeopleModal)
   router.get('/my-message-to-people', getMyMessageToPeople)
   router.put('/my-message-to-people', updateMyMessageToPeople)
 
