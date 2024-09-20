@@ -4,6 +4,8 @@ exports.up = async function (knex) {
     table.string('user_id', 32).notNullable()
     table.boolean('is_undertake').notNullable()
     table.boolean('is_subscribed').notNullable()
+    table.boolean('is_undertake_2').notNullable()
+    table.boolean('is_subscribed_2').notNullable()
     table.timestamp('created_at').defaultTo(knex.fn.now())
     table.timestamp('updated_at').defaultTo(knex.fn.now())
   })
