@@ -34,9 +34,9 @@ export function createCabinetRouter() {
 
   // Послання SHCHUS
 
-  // router.post('/my-message-to-people', createMyMessageToPeople)
-  // router.get('/my-message-to-people', getMyMessageToPeople)
-  // router.put('/my-message-to-people', updateMyMessageToPeople)
+  router.post('/my-message-to-people', createMyMessageToPeople)
+  router.get('/my-message-to-people', getMyMessageToPeople)
+  router.put('/my-message-to-people', updateMyMessageToPeople)
 
   // router.post('/my-message-to-inventors', createMyMessageToInventors)
   // router.get('/my-message-to-inventors', getMyMessageToInventors)
