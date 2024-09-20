@@ -41,14 +41,12 @@ export async function updateMyMessageToPeople(req: Request, res: Response) {
 }
 
 export async function createMyMessageToPeopleModal(req, res: Response) {
-  const { userId, isUndertake, isSubscribed, isUndertake2, isSubscribed2 } = req.query
+  const { userId, isUndertake, isSubscribed } = req.query
 
   const objToDb = {
     user_id: userId,
     is_undertake: isUndertake,
     is_subscribed: isSubscribed,
-    is_undertake_2: isUndertake2,
-    is_subscribed_2: isSubscribed2,
   }
 
   try {
