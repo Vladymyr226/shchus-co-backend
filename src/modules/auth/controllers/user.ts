@@ -53,7 +53,20 @@ export async function login(req, res) {
     console.log('token-login ', token)
     return res.status(200).json({ token, user: user[0] })
   } catch (error) {
-    console.error('Error in login-controller', error)
+    console.error('Error in user.ts', error)
     return res.status(400).json({ message: error })
+  }
+}
+
+export async function getUserInfoById(req: Request, res: Response) {
+  const { userId } = req.query
+
+  try {
+    const getUserInfoById = await db.select('*').from('users').where('id', userId)
+
+    return res.status(200).json({ getUserInfoById })
+  } catch (error) {
+    console.error('Error in user.ts', error)
+    return res.status(500).json({ message: 'Internal Server Error' })
   }
 }

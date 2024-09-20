@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
-import { createAuthRouter } from './modules/auth/routes/users'
+import { createAuthRouter } from './modules/auth/routes/routes'
 import cors from 'cors'
 import { Router } from 'express'
 import { createPaymentRouter } from './modules/payment/routes/payment'
