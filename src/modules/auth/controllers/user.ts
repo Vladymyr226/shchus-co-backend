@@ -62,10 +62,7 @@ export async function getUserInfoById(req: Request, res: Response) {
   const { userId } = req.query
 
   try {
-    const getUserInfoById = await db
-      .select('first_name, last_name')
-      .from('users')
-      .where('id', userId)
+    const getUserInfoById = await db('users').select('first_name', 'last_name').where('id', userId)
 
     return res.status(200).json({ getUserInfoById })
   } catch (error) {
