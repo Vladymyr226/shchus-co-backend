@@ -20,7 +20,9 @@ import {
 } from '../controllers/message-from-shchus/message-to-inventors'
 import {
   createMyMessageToInvestors,
+  createMyMessageToInvestorsModal,
   getMyMessageToInvestors,
+  getMyMessageToInvestorsModal,
   updateMyMessageToInvestors,
 } from '../controllers/message-from-shchus/message-to-investors'
 import {
@@ -50,9 +52,11 @@ export function createCabinetRouter() {
   router.get('/my-message-to-inventors', getMyMessageToInventors)
   router.put('/my-message-to-inventors', updateMyMessageToInventors)
 
-  // router.post('/my-message-to-investors', createMyMessageToInvestors)
-  // router.get('/my-message-to-investors', getMyMessageToInvestors)
-  // router.put('/my-message-to-investors', updateMyMessageToInvestors)
+  router.post('/my-message-to-investors', createMyMessageToInvestors)
+  router.post('/my-message-to-investors-modal', createMyMessageToInvestorsModal)
+  router.get('/my-message-to-investors-modal', getMyMessageToInvestorsModal)
+  router.get('/my-message-to-investors', getMyMessageToInvestors)
+  router.put('/my-message-to-investors', updateMyMessageToInvestors)
 
   // router.post('/my-message-to-shchus', createMyMessageToShchus)
   // router.get('/my-message-to-shchus', getMyMessageToShchus)
