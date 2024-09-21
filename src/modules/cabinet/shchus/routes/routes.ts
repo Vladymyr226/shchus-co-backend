@@ -13,7 +13,9 @@ import {
 } from '../controllers/message-from-shchus/message-to-people'
 import {
   createMyMessageToInventors,
+  createMyMessageToInventorsModal,
   getMyMessageToInventors,
+  getMyMessageToInventorsModal,
   updateMyMessageToInventors,
 } from '../controllers/message-from-shchus/message-to-inventors'
 import {
@@ -42,9 +44,11 @@ export function createCabinetRouter() {
   router.get('/my-message-to-people', getMyMessageToPeople)
   router.put('/my-message-to-people', updateMyMessageToPeople)
 
-  // router.post('/my-message-to-inventors', createMyMessageToInventors)
-  // router.get('/my-message-to-inventors', getMyMessageToInventors)
-  // router.put('/my-message-to-inventors', updateMyMessageToInventors)
+  router.post('/my-message-to-inventors', createMyMessageToInventors)
+  router.post('/my-message-to-inventors-modal', createMyMessageToInventorsModal)
+  router.get('/my-message-to-inventors-modal', getMyMessageToInventorsModal)
+  router.get('/my-message-to-inventors', getMyMessageToInventors)
+  router.put('/my-message-to-inventors', updateMyMessageToInventors)
 
   // router.post('/my-message-to-investors', createMyMessageToInvestors)
   // router.get('/my-message-to-investors', getMyMessageToInvestors)
