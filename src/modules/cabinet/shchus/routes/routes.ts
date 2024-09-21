@@ -27,7 +27,9 @@ import {
 } from '../controllers/message-from-shchus/message-to-investors'
 import {
   createMyMessageToShchus,
+  createMyMessageToShchusModal,
   getMyMessageToShchus,
+  getMyMessageToShchusModal,
   updateMyMessageToShchus,
 } from '../controllers/message-from-shchus/message-to-shchus'
 
@@ -58,9 +60,11 @@ export function createCabinetRouter() {
   router.get('/my-message-to-investors', getMyMessageToInvestors)
   router.put('/my-message-to-investors', updateMyMessageToInvestors)
 
-  // router.post('/my-message-to-shchus', createMyMessageToShchus)
-  // router.get('/my-message-to-shchus', getMyMessageToShchus)
-  // router.put('/my-message-to-shchus', updateMyMessageToShchus)
+  router.post('/my-message-to-shchus', createMyMessageToShchus)
+  router.post('/my-message-to-shchus-modal', createMyMessageToShchusModal)
+  router.get('/my-message-to-shchus-modal', getMyMessageToShchusModal)
+  router.get('/my-message-to-shchus', getMyMessageToShchus)
+  router.put('/my-message-to-shchus', updateMyMessageToShchus)
 
   return router
 }
