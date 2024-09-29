@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
 import db from '../../../db/knexKonfig'
 import { generateToken } from '../../../utils/token.utils'
+import { UPDATED } from '../../../middleware/error.middleware'
 
 export async function registration(req: Request, res: Response) {
   const { name, surname, email, password } = req.query
@@ -65,6 +66,20 @@ export async function getUserInfoById(req: Request, res: Response) {
     const getUserInfoById = await db('users').select('first_name', 'last_name').where('id', userId)
 
     return res.status(200).json({ getUserInfoById })
+  } catch (error) {
+    console.error('Error in user.ts', error)
+    return res.status(500).json({ message: 'Internal Server Error' })
+  }
+}
+
+export async function updateUser(req: Request, res: Response) {
+  const newJson = req.body
+  const { userId } = req.query
+
+  try {
+    await db.table('users').update({ subs_modals: newJson }).where('id', userId)
+
+    return res.status(200).json({ message: UPDATED })
   } catch (error) {
     console.error('Error in user.ts', error)
     return res.status(500).json({ message: 'Internal Server Error' })
