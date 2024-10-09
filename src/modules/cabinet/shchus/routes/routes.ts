@@ -31,9 +31,22 @@ import {
   updateMyPartnership,
 } from '../controllers/partnership'
 import { createMyModal, getMyModalById, updateMyModalById } from '../controllers/modals'
+import {
+  createMyShchusLifeEnergy,
+  getMyShchusLifeEnergy,
+  updateMyShchusLifeEnergy,
+} from '../controllers/shchus-life/energy'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
+
+  // работа с модалками
+
+  router.post('/modal', createMyModal)
+  router.get('/modal-by-id', getMyModalById)
+  router.put('/modal-by-id', updateMyModalById)
+
+  // Про Бюро Щусь
 
   router.post('/my-about-bureau', createMyAboutBureau)
   router.get('/my-about-bureaus', myAboutBureaus)
@@ -69,11 +82,11 @@ export function createCabinetRouter() {
   router.get('/my-partnership', getMyPartnership)
   router.put('/my-partnership', updateMyPartnership)
 
-  // работа с модалками
+  // Shchus Life
 
-  router.post('/modal', createMyModal)
-  router.get('/modal-by-id', getMyModalById)
-  router.put('/modal-by-id', updateMyModalById)
+  router.post('/my-shchus-life/energy', createMyShchusLifeEnergy)
+  router.get('/my-shchus-life/energy', getMyShchusLifeEnergy)
+  router.put('/my-shchus-life/energy', updateMyShchusLifeEnergy)
 
   return router
 }
