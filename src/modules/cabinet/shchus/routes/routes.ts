@@ -36,6 +36,11 @@ import {
   getMyShchusLifeEnergy,
   updateMyShchusLifeEnergy,
 } from '../controllers/shchus-life/energy'
+import {
+  createMyShchusLifeTimeOfLife,
+  getMyShchusLifeTimeOfLife,
+  updateMyShchusLifeTimeOfLife,
+} from '../controllers/shchus-life/time-of-life'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -87,6 +92,10 @@ export function createCabinetRouter() {
   router.post('/my-shchus-life/energy', createMyShchusLifeEnergy)
   router.get('/my-shchus-life/energy', getMyShchusLifeEnergy)
   router.put('/my-shchus-life/energy', updateMyShchusLifeEnergy)
+
+  router.post('/my-shchus-life/time-of-life', createMyShchusLifeTimeOfLife)
+  router.get('/my-shchus-life/time-of-life', getMyShchusLifeTimeOfLife)
+  router.put('/my-shchus-life/time-of-life', updateMyShchusLifeTimeOfLife)
 
   return router
 }
