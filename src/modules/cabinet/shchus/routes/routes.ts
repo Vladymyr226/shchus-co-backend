@@ -41,6 +41,21 @@ import {
   getMyShchusLifeTimeOfLife,
   updateMyShchusLifeTimeOfLife,
 } from '../controllers/shchus-life/time-of-life'
+import {
+  createMyShchusLifeBrain,
+  getMyShchusLifeBrain,
+  updateMyShchusLifeBrain,
+} from '../controllers/shchus-life/brain'
+import {
+  createMyShchusLifeHealth,
+  getMyShchusLifeHealth,
+  updateMyShchusLifeHealth,
+} from '../controllers/shchus-life/health'
+import {
+  createMyShchusLifeWisdom,
+  getMyShchusLifeWisdom,
+  updateMyShchusLifeWisdom,
+} from '../controllers/shchus-life/wisdom'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -96,6 +111,18 @@ export function createCabinetRouter() {
   router.post('/my-shchus-life/time-of-life', createMyShchusLifeTimeOfLife)
   router.get('/my-shchus-life/time-of-life', getMyShchusLifeTimeOfLife)
   router.put('/my-shchus-life/time-of-life', updateMyShchusLifeTimeOfLife)
+
+  router.post('/my-shchus-life/brain', createMyShchusLifeBrain)
+  router.get('/my-shchus-life/brain', getMyShchusLifeBrain)
+  router.put('/my-shchus-life/brain', updateMyShchusLifeBrain)
+
+  router.post('/my-shchus-life/wisdom', createMyShchusLifeWisdom)
+  router.get('/my-shchus-life/wisdom', getMyShchusLifeWisdom)
+  router.put('/my-shchus-life/wisdom', updateMyShchusLifeWisdom)
+
+  router.post('/my-shchus-life/health', createMyShchusLifeHealth)
+  router.get('/my-shchus-life/health', getMyShchusLifeHealth)
+  router.put('/my-shchus-life/health', updateMyShchusLifeHealth)
 
   return router
 }
