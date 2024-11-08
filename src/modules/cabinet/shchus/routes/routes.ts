@@ -30,7 +30,12 @@ import {
   getMyPartnership,
   updateMyPartnership,
 } from '../controllers/partnership'
-import { createMyModal, getMyModalById, updateMyModalById } from '../controllers/modals'
+import {
+  createMyModal,
+  getMyModalById,
+  getMyModalsById,
+  updateMyModalById,
+} from '../controllers/modals'
 import {
   createMyShchusLifeEnergy,
   getMyShchusLifeEnergy,
@@ -65,6 +70,7 @@ export function createCabinetRouter() {
   router.post('/modal', createMyModal)
   router.get('/modal-by-id', getMyModalById)
   router.put('/modal-by-id', updateMyModalById)
+  router.get('/modals-by-id', getMyModalsById)
 
   // Про Бюро Щусь
 
