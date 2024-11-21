@@ -61,6 +61,56 @@ import {
   getMyShchusLifeWisdom,
   updateMyShchusLifeWisdom,
 } from '../controllers/shchus-life/wisdom'
+import {
+  createMyConstructorBusiness,
+  getMyConstructorBusiness,
+  updateMyConstructorBusiness,
+} from '../controllers/constructor/business'
+import {
+  createMyConstructorIpo,
+  getMyConstructorIpo,
+  updateMyConstructorIpo,
+} from '../controllers/constructor/ipo'
+import {
+  createMyConstructorCollaborations,
+  getMyConstructorCollaborations,
+  updateMyConstructorCollaborations,
+} from '../controllers/constructor/collaborations'
+import {
+  createMyConstructorMillion,
+  getMyConstructorMillion,
+  updateMyConstructorMillion,
+} from '../controllers/constructor/million'
+import {
+  createMyConstructorProducts,
+  getMyConstructorProducts,
+  updateMyConstructorProducts,
+} from '../controllers/constructor/products'
+import {
+  createMyConstructorOfMyDreams,
+  getMyConstructorOfMyDreams,
+  updateMyConstructorOfMyDreams,
+} from '../controllers/constructor/of-my-dreams'
+import {
+  createMyConstructorTalents,
+  getMyConstructorTalents,
+  updateMyConstructorTalents,
+} from '../controllers/constructor/talents'
+import {
+  createMyConstructorPath,
+  getMyConstructorPath,
+  updateMyConstructorPath,
+} from '../controllers/constructor/path'
+import {
+  createMyConstructorOpportunities,
+  getMyConstructorOpportunities,
+  updateMyConstructorOpportunities,
+} from '../controllers/constructor/opportunities'
+import {
+  createMyConstructorIdeas,
+  getMyConstructorIdeas,
+  updateMyConstructorIdeas,
+} from '../controllers/constructor/ideas'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -129,6 +179,48 @@ export function createCabinetRouter() {
   router.post('/my-shchus-life/health', createMyShchusLifeHealth)
   router.get('/my-shchus-life/health', getMyShchusLifeHealth)
   router.put('/my-shchus-life/health', updateMyShchusLifeHealth)
+
+  // Constructors
+
+  router.post('/my-constructor/million', createMyConstructorMillion)
+  router.get('/my-constructor/million', getMyConstructorMillion)
+  router.put('/my-constructor/million', updateMyConstructorMillion)
+
+  router.post('/my-constructor/products', createMyConstructorProducts)
+  router.get('/my-constructor/products', getMyConstructorProducts)
+  router.put('/my-constructor/products', updateMyConstructorProducts)
+
+  router.post('/my-constructor/of-my-dreams', createMyConstructorOfMyDreams)
+  router.get('/my-constructor/of-my-dreams', getMyConstructorOfMyDreams)
+  router.put('/my-constructor/of-my-dreams', updateMyConstructorOfMyDreams)
+
+  router.post('/my-constructor/talents', createMyConstructorTalents)
+  router.get('/my-constructor/talents', getMyConstructorTalents)
+  router.put('/my-constructor/talents', updateMyConstructorTalents)
+
+  router.post('/my-constructor/path', createMyConstructorPath)
+  router.get('/my-constructor/path', getMyConstructorPath)
+  router.put('/my-constructor/path', updateMyConstructorPath)
+
+  router.post('/my-constructor/opportunities', createMyConstructorOpportunities)
+  router.get('/my-constructor/opportunities', getMyConstructorOpportunities)
+  router.put('/my-constructor/opportunities', updateMyConstructorOpportunities)
+
+  router.post('/my-constructor/ideas', createMyConstructorIdeas)
+  router.get('/my-constructor/ideas', getMyConstructorIdeas)
+  router.put('/my-constructor/ideas', updateMyConstructorIdeas)
+
+  router.post('/my-constructor/collaborations', createMyConstructorCollaborations)
+  router.get('/my-constructor/collaborations', getMyConstructorCollaborations)
+  router.put('/my-constructor/collaborations', updateMyConstructorCollaborations)
+
+  router.post('/my-constructor/business', createMyConstructorBusiness)
+  router.get('/my-constructor/business', getMyConstructorBusiness)
+  router.put('/my-constructor/business', updateMyConstructorBusiness)
+
+  router.post('/my-constructor/ipo', createMyConstructorIpo)
+  router.get('/my-constructor/ipo', getMyConstructorIpo)
+  router.put('/my-constructor/ipo', updateMyConstructorIpo)
 
   return router
 }
