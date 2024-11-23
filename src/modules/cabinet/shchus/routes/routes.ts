@@ -116,6 +116,11 @@ import {
   getMyAboutShchus,
   updateMyAboutShchus,
 } from '../controllers/about-shchus'
+import {
+  createMyAttitudeShchus,
+  getMyAttitudeShchus,
+  updateMyAttitudeShchus,
+} from '../controllers/attitude-shchus'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -138,6 +143,12 @@ export function createCabinetRouter() {
   router.post('/my-about-bureau', createMyAboutBureau)
   router.get('/my-about-bureaus', myAboutBureaus)
   router.put('/my-about-bureau', updateMyAboutBureau)
+
+  // Настанова Щусь
+
+  router.post('/my-attitude-shchus', createMyAttitudeShchus)
+  router.get('/my-attitude-shchus', getMyAttitudeShchus)
+  router.put('/my-attitude-shchus', updateMyAttitudeShchus)
 
   // Послання SHCHUS
 
