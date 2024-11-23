@@ -111,6 +111,11 @@ import {
   getMyConstructorIdeas,
   updateMyConstructorIdeas,
 } from '../controllers/constructor/ideas'
+import {
+  createMyAboutShchus,
+  getMyAboutShchus,
+  updateMyAboutShchus,
+} from '../controllers/about-shchus'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -121,6 +126,12 @@ export function createCabinetRouter() {
   router.get('/modal-by-id', getMyModalById)
   router.put('/modal-by-id', updateMyModalById)
   router.get('/modals-by-id', getMyModalsById)
+
+  //Про Щусь
+
+  router.post('/my-about-shchus', createMyAboutShchus)
+  router.get('/my-about-shchus', getMyAboutShchus)
+  router.put('/my-about-shchus', updateMyAboutShchus)
 
   // Про Бюро Щусь
 
