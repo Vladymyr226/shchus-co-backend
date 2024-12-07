@@ -121,6 +121,11 @@ import {
   getMyAttitudeShchus,
   updateMyAttitudeShchus,
 } from '../controllers/attitude-shchus'
+import {
+  createMyMarketplace,
+  getMyMarketplace,
+  updateMyMarketplace,
+} from '../controllers/shchus-hub/marketplace'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -243,6 +248,12 @@ export function createCabinetRouter() {
   router.post('/my-constructor/ipo', createMyConstructorIpo)
   router.get('/my-constructor/ipo', getMyConstructorIpo)
   router.put('/my-constructor/ipo', updateMyConstructorIpo)
+
+  //Marketplace
+
+  router.post('/my-marketplace', createMyMarketplace)
+  router.get('/my-marketplace', getMyMarketplace)
+  router.put('/my-marketplace', updateMyMarketplace)
 
   return router
 }
