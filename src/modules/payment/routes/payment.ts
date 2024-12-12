@@ -1,16 +1,16 @@
-import { paymentRedirect } from '../controllers/payment.redirect.controller'
-import { paymentStatusBy } from '../controllers/paymentStatusBy.controller'
-import { savePaymentObj } from '../controllers/savePaymentObj.controller'
-import { subscriptionHandler } from '../controllers/subscription.controller'
+import { liqpay } from '../controllers/liqpay'
+import { getPayments } from '../controllers/payments'
+import { paymentStatusById } from '../controllers/paymentStatusById'
+import { savePaymentObj } from '../controllers/savePaymentObj'
 import { Router } from 'express'
 
 export function createPaymentRouter() {
   const router = Router({ mergeParams: true })
 
-  router.post('/fondy', subscriptionHandler)
-  router.post('/save', savePaymentObj)
-  router.post('/redirect', paymentRedirect)
-  router.post('/status-by', paymentStatusBy)
+  router.post('/liqpay', liqpay)
+  router.post('/liqpay/callback', savePaymentObj)
+  router.post('/payment-status-by-id', paymentStatusById)
 
+  router.get('/payments', getPayments)
   return router
 }
