@@ -249,11 +249,7 @@ export function createCabinetRouter() {
   router.get('/my-constructor/ipo', getMyConstructorIpo)
   router.put('/my-constructor/ipo', updateMyConstructorIpo)
 
-  //Marketplace
-
-  router.post('/my-marketplace', createMyMarketplace)
-  router.get('/my-marketplace', getMyMarketplace)
-  router.put('/my-marketplace', updateMyMarketplace)
+ 
 
   return router
 }
