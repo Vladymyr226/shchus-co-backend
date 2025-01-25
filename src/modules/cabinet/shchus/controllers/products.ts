@@ -30,7 +30,7 @@ export async function getMyProducts(req: Request, res: Response) {
 
 export async function updateMyProduct(req: Request, res: Response) {
   const newJson = req.body
-  const { id, title, description, price, type } = req.params
+  const { id, title, description, price, type } = req.query
 
   try {
     await db.table('products').where({ id }).update({ title, description, price, type, data: newJson })
@@ -43,7 +43,7 @@ export async function updateMyProduct(req: Request, res: Response) {
 }
 
 export async function deleteMyProduct(req: Request, res: Response) {
-  const { id } = req.params
+  const { id } = req.query
 
   try {
     await db('products').where({ id }).del()
@@ -57,7 +57,7 @@ export async function deleteMyProduct(req: Request, res: Response) {
 
 export async function getMyProductById(req: Request, res: Response) {
   const { id } = req.query
-
+    
   try {
     const getMyProductById = await db('products').select('*').where('id', id)
 

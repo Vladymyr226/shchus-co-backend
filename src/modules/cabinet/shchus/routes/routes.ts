@@ -122,6 +122,13 @@ import {
   updateMyAttitudeShchus,
 } from '../controllers/attitude-shchus'
 import { createMyProduct, getMyProducts, updateMyProduct, deleteMyProduct, getMyProductById } from '../controllers/products'
+import {
+  createMyArchiveHub,
+  getMyArchiveHub,
+  getMyArchiveHubById,
+  updateMyArchiveHub,
+  deleteMyArchiveHub,
+} from '../controllers/archive-hub'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -252,6 +259,14 @@ export function createCabinetRouter() {
   router.get('/my-product/by-id', getMyProductById)
   router.put('/my-product', updateMyProduct)
   router.delete('/my-product', deleteMyProduct)
+
+  // Архів-Хаб
+
+  router.post('/my-archive-hub', createMyArchiveHub)
+  router.get('/my-archive-hub', getMyArchiveHub)
+  router.get('/my-archive-hub/by-id', getMyArchiveHubById)
+  router.put('/my-archive-hub', updateMyArchiveHub)
+  router.delete('/my-archive-hub', deleteMyArchiveHub)
 
   return router
 }
