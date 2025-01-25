@@ -54,3 +54,16 @@ export async function deleteMyProduct(req: Request, res: Response) {
     return res.status(500).json({ message: 'Internal Server Error' })
   }
 }
+
+export async function getMyProductById(req: Request, res: Response) {
+  const { id } = req.query
+
+  try {
+    const getMyProductById = await db('products').select('*').where('id', id)
+
+    return res.status(200).json({ getMyProductById })
+  } catch (error) {
+    console.error('Error in products.ts', error)
+    return res.status(500).json({ message: 'Internal Server Error' })
+  }
+  }

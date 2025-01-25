@@ -121,7 +121,7 @@ import {
   getMyAttitudeShchus,
   updateMyAttitudeShchus,
 } from '../controllers/attitude-shchus'
-import { createMyProduct, getMyProducts, updateMyProduct, deleteMyProduct } from '../controllers/products'
+import { createMyProduct, getMyProducts, updateMyProduct, deleteMyProduct, getMyProductById } from '../controllers/products'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -249,6 +249,7 @@ export function createCabinetRouter() {
 
   router.post('/my-product', createMyProduct)
   router.get('/my-products', getMyProducts)
+  router.get('/my-product/by-id', getMyProductById)
   router.put('/my-product', updateMyProduct)
   router.delete('/my-product', deleteMyProduct)
 
