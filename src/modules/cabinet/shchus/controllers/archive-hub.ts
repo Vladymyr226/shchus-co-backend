@@ -15,7 +15,7 @@ export async function createMyArchiveHub(req: Request, res: Response) {
     }
 }
 
-export async function getMyArchiveHub(req: Request, res: Response) {
+export async function getMyArchiveHubs(req: Request, res: Response) {
     try {
         const getMyArchiveHub = await db('my_archive_hub').select('*')
         return res.status(200).json({ getMyArchiveHub })
@@ -25,7 +25,7 @@ export async function getMyArchiveHub(req: Request, res: Response) {
     }
 }
 
-export async function getMyArchiveHubById(req: Request, res: Response) {
+export async function getMyArchiveHub(req: Request, res: Response) {
     const { id } = req.query
 
     try {
@@ -42,9 +42,7 @@ export async function updateMyArchiveHub(req: Request, res: Response) {
     const json = req.body
 
     try {
-        await db('my_archive_hub')
-            .where({ id })
-            .update({ data: json })
+        await db('my_archive_hub').where({ id }).update({ data: json })
         return res.status(200).json({ message: UPDATED })
     } catch (error) {
         console.error('Error in archive-hub.ts', error)

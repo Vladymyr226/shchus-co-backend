@@ -125,9 +125,9 @@ import { createMyProduct, getMyProducts, updateMyProduct, deleteMyProduct, getMy
 import {
   createMyArchiveHub,
   getMyArchiveHub,
-  getMyArchiveHubById,
-  updateMyArchiveHub,
   deleteMyArchiveHub,
+  getMyArchiveHubs,
+  updateMyArchiveHub,
 } from '../controllers/archive-hub'
 
 export function createCabinetRouter() {
@@ -263,8 +263,8 @@ export function createCabinetRouter() {
   // Архів-Хаб
 
   router.post('/my-archive-hub', createMyArchiveHub)
+  router.get('/my-archive-hubs', getMyArchiveHubs)
   router.get('/my-archive-hub', getMyArchiveHub)
-  router.get('/my-archive-hub/by-id', getMyArchiveHubById)
   router.put('/my-archive-hub', updateMyArchiveHub)
   router.delete('/my-archive-hub', deleteMyArchiveHub)
 
