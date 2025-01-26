@@ -121,7 +121,7 @@ import {
   getMyAttitudeShchus,
   updateMyAttitudeShchus,
 } from '../controllers/attitude-shchus'
-import { createMyProduct, getMyProducts, updateMyProduct, deleteMyProduct, getMyProductById } from '../controllers/products'
+import { createMyProduct, getMyProducts, updateMyProduct, deleteMyProduct, getMyProduct } from '../controllers/products'
 import {
   createMyArchiveHub,
   getMyArchiveHub,
@@ -256,7 +256,7 @@ export function createCabinetRouter() {
 
   router.post('/my-product', createMyProduct)
   router.get('/my-products', getMyProducts)
-  router.get('/my-product/by-id', getMyProductById)
+  router.get('/my-product', getMyProduct)
   router.put('/my-product', updateMyProduct)
   router.delete('/my-product', deleteMyProduct)
 
