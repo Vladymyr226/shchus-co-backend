@@ -129,6 +129,26 @@ import {
   getMyArchiveHubs,
   updateMyArchiveHub,
 } from '../controllers/archive-hub'
+import { createMyIndustrialHubFuture, getMyIndustrialHubFuture, updateMyIndustrialHubFuture } from '../controllers/industrial-hub/future'
+import { createMyIndustrialHubLifeResources, getMyIndustrialHubLifeResources, updateMyIndustrialHubLifeResources } from '../controllers/industrial-hub/life-resources'
+import { createMyIndustrialHubTools } from '../controllers/industrial-hub/tools'
+import { getMyIndustrialHubTools } from '../controllers/industrial-hub/tools'
+import { getMyIndustrialHubIndustrialPark, updateMyIndustrialHubIndustrialPark } from '../controllers/industrial-hub/industrial-park'
+import { createMyIndustrialHubIndustrialPark } from '../controllers/industrial-hub/industrial-park'
+import { updateMyIndustrialHubTools } from '../controllers/industrial-hub/tools'
+import { createMyIndustrialHubSkills, getMyIndustrialHubSkills, updateMyIndustrialHubSkills } from '../controllers/industrial-hub/skills'
+import { createMyIndustrialHubKnowledgeFromCB, getMyIndustrialHubKnowledgeFromCB, updateMyIndustrialHubKnowledgeFromCB } from '../controllers/industrial-hub/knowledge-from-cb'
+import { updateMyIndustrialHubMaterials } from '../controllers/industrial-hub/materials'
+import { createMyIndustrialHubMaterials } from '../controllers/industrial-hub/materials'
+import { getMyIndustrialHubMaterials } from '../controllers/industrial-hub/materials'
+import { updateMyIndustrialHubInvestmentCases } from '../controllers/industrial-hub/investment-cases'
+import { createMyIndustrialHubInvestmentCases } from '../controllers/industrial-hub/investment-cases'
+import { getMyIndustrialHubInvestmentCases } from '../controllers/industrial-hub/investment-cases'
+import { getMyIndustrialHubInvestmentPortfolios, updateMyIndustrialHubInvestmentPortfolio } from '../controllers/industrial-hub/investment-portfolios'
+import { createMyIndustrialHubInvestmentPortfolio } from '../controllers/industrial-hub/investment-portfolios'
+import { updateMyIndustrialHubTechnopark } from '../controllers/industrial-hub/technopark'
+import { getMyIndustrialHubTechnopark } from '../controllers/industrial-hub/technopark'
+import { createMyIndustrialHubTechnopark } from '../controllers/industrial-hub/technopark'
 
 export function createCabinetRouter() {
   const router = Router({ mergeParams: true })
@@ -267,6 +287,48 @@ export function createCabinetRouter() {
   router.get('/my-archive-hub', getMyArchiveHub)
   router.put('/my-archive-hub', updateMyArchiveHub)
   router.delete('/my-archive-hub', deleteMyArchiveHub)
+
+  // Індустріальний хаб
+
+  router.post('/my-industrial-hub/future', createMyIndustrialHubFuture)
+  router.get('/my-industrial-hub/future', getMyIndustrialHubFuture)
+  router.put('/my-industrial-hub/future', updateMyIndustrialHubFuture)
+
+  router.post('/my-industrial-hub/knowledge-from-cb', createMyIndustrialHubKnowledgeFromCB)
+  router.get('/my-industrial-hub/knowledge-from-cb', getMyIndustrialHubKnowledgeFromCB)
+  router.put('/my-industrial-hub/knowledge-from-cb', updateMyIndustrialHubKnowledgeFromCB)
+
+  router.post('/my-industrial-hub/life-resources', createMyIndustrialHubLifeResources)
+  router.get('/my-industrial-hub/life-resources', getMyIndustrialHubLifeResources)
+  router.put('/my-industrial-hub/life-resources', updateMyIndustrialHubLifeResources)
+
+  router.post('/my-industrial-hub/skills', createMyIndustrialHubSkills)
+  router.get('/my-industrial-hub/skills', getMyIndustrialHubSkills)
+  router.put('/my-industrial-hub/skills', updateMyIndustrialHubSkills)
+
+  router.post('/my-industrial-hub/tools', createMyIndustrialHubTools)
+  router.get('/my-industrial-hub/tools', getMyIndustrialHubTools)
+  router.put('/my-industrial-hub/tools', updateMyIndustrialHubTools)
+
+  router.post('/my-industrial-hub/industrial-park', createMyIndustrialHubIndustrialPark)
+  router.get('/my-industrial-hub/industrial-park', getMyIndustrialHubIndustrialPark)
+  router.put('/my-industrial-hub/industrial-park', updateMyIndustrialHubIndustrialPark)
+
+  router.post('/my-industrial-hub/materials', createMyIndustrialHubMaterials)
+  router.get('/my-industrial-hub/materials', getMyIndustrialHubMaterials)
+  router.put('/my-industrial-hub/materials', updateMyIndustrialHubMaterials)
+
+  router.post('/my-industrial-hub/investment-cases', createMyIndustrialHubInvestmentCases)
+  router.get('/my-industrial-hub/investment-cases', getMyIndustrialHubInvestmentCases)
+  router.put('/my-industrial-hub/investment-cases', updateMyIndustrialHubInvestmentCases)
+
+  router.post('/my-industrial-hub/investment-portfolio', createMyIndustrialHubInvestmentPortfolio)
+  router.get('/my-industrial-hub/investment-portfolio', getMyIndustrialHubInvestmentPortfolios)
+  router.put('/my-industrial-hub/investment-portfolio', updateMyIndustrialHubInvestmentPortfolio)
+
+  router.post('/my-industrial-hub/technopark', createMyIndustrialHubTechnopark)
+  router.get('/my-industrial-hub/technopark', getMyIndustrialHubTechnopark)
+  router.put('/my-industrial-hub/technopark', updateMyIndustrialHubTechnopark)
 
   return router
 }

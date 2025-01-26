@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import db from '../../../../../db/knexKonfig'
 import { CREATED, UPDATED } from '../../../../../middleware/error.middleware'
 
-export async function createMyIndustrialHubInvestmentPortfolios(req, res: Response) {
+export async function createMyIndustrialHubInvestmentPortfolio(req, res: Response) {
   const json = req.body
 
   try {
@@ -31,7 +31,7 @@ export async function getMyIndustrialHubInvestmentPortfolios(req: Request, res: 
   }
 }
 
-export async function updateMyIndustrialHubInvestmentPortfolios(req: Request, res: Response) {
+export async function updateMyIndustrialHubInvestmentPortfolio(req: Request, res: Response) {
   const newJson = req.body
 
   try {

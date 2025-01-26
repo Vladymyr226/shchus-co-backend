@@ -31,7 +31,7 @@ export async function updateMyIndustrialHubFuture(req: Request, res: Response) {
   const newJson = req.body
 
   try {
-    await db.table('my_industrial_hub_future').update({ data: newJson })
+    await db('my_industrial_hub_future').update({ data: newJson })
 
     return res.status(200).json({ message: UPDATED })
   } catch (error) {
