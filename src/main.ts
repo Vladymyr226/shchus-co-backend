@@ -26,6 +26,13 @@ function createGenerateImageRouter() {
 
   router.post('/generate-image', async (req: Request, res: Response) => {
     try {
+      console.log('Generate image request body:', req.body);
+      
+      if (!process.env.REPLICATE_API_TOKEN) {
+        console.error('REPLICATE_API_TOKEN is not set');
+        return res.status(500).json({ error: 'API token not configured' });
+      }
+
       // Create prediction
       const response = await fetch('https://api.replicate.com/v1/predictions', {
         method: 'POST',
@@ -37,14 +44,13 @@ function createGenerateImageRouter() {
       });
       
       const prediction = await response.json();
+      console.log('Replicate API response:', prediction);
       
-      // Check if the prediction was created successfully
       if (!prediction || prediction.error) {
         console.error('Prediction creation failed:', prediction.error || 'Unknown error');
-        return res.status(500).json({ error: 'Failed to create prediction' });
+        return res.status(500).json({ error: 'Failed to create prediction', details: prediction.error });
       }
 
-      // Вместо ожидания результата, сразу возвращаем id и URL для проверки статуса
       res.json({
         id: prediction.id,
         status: prediction.status,
@@ -52,8 +58,8 @@ function createGenerateImageRouter() {
       });
       
     } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Failed to generate image' });
+      console.error('Error in generate-image:', error);
+      res.status(500).json({ error: 'Failed to generate image', details: error });
     }
   });
 
@@ -67,10 +73,16 @@ function createGenerateImageRouter() {
       });
       
       const result = await response.json();
+      console.log(`Status check for ${req.params.id}:`, result);
+      
+      if (result.status === 'succeeded' && Array.isArray(result.output) && result.output.length > 0) {
+        console.log('Generated image URL:', result.output[0]);
+      }
+      
       res.json(result);
     } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Failed to check prediction status' });
+      console.error('Error in check-status:', error);
+      res.status(500).json({ error: 'Failed to check prediction status', details: error });
     }
   });
 
