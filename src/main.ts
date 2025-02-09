@@ -9,6 +9,7 @@ import { createCabinetRouter } from './modules/cabinet/shchus/routes/routes'
 import { errorHandlerMiddleware } from './middleware/error.middleware'
 import http from 'http'
 import { setupChatSocket } from './modules/chats/chat'
+import fetch from 'node-fetch'
 
 const app = express()
 const server = http.createServer(app)
@@ -20,12 +21,52 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+function createGenerateImageRouter() {
+  const router = Router({ mergeParams: true })
+
+  router.post('/generate-image', async (req: Request, res: Response) => {
+    try {
+      // Создаем предсказание
+      const response = await fetch('https://api.replicate.com/v1/predictions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(req.body)
+      });
+      
+      const prediction: any = await response.json();
+      
+      // Ждем результата
+      let result: any = prediction;
+      while (result.status !== 'succeeded' && result.status !== 'failed') {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Ждем 1 секунду
+        const pollResponse = await fetch(prediction.urls.get, {
+          headers: {
+            'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
+          },
+        });
+        result = await pollResponse.json();
+      }
+      
+      res.json(result);
+    } catch (error) {
+      console.error('Error:', error);
+      res.status(500).json({ error: 'Failed to generate image' });
+    }
+  });
+
+  return router;
+}
+
 function addApiRoutes() {
   const router = Router({ mergeParams: true })
 
   router.use('/auth', createAuthRouter())
   router.use('/cabinet', createCabinetRouter())
   router.use('/payment', createPaymentRouter())
+  router.use('/generate', createGenerateImageRouter())
 
   return router
 }
