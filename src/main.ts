@@ -26,7 +26,7 @@ function createGenerateImageRouter() {
 
   router.post('/generate-image', async (req: Request, res: Response) => {
     try {
-      // Создаем предсказание
+      // Create prediction
       const response = await fetch('https://api.replicate.com/v1/predictions', {
         method: 'POST',
         headers: {
@@ -36,18 +36,34 @@ function createGenerateImageRouter() {
         body: JSON.stringify(req.body)
       });
       
-      const prediction: any = await response.json();
+      const prediction = await response.json();
       
-      // Ждем результата
-      let result: any = prediction;
+      // Check if the prediction was created successfully
+      if (!prediction || prediction.error) {
+        console.error('Prediction creation failed:', prediction.error || 'Unknown error');
+        return res.status(500).json({ error: 'Failed to create prediction' });
+      }
+
+      // Check if we have a valid get URL
+      if (!prediction.urls || !prediction.urls.get) {
+        console.error('Invalid prediction response structure:', prediction);
+        return res.status(500).json({ error: 'Invalid API response structure' });
+      }
+
+      // Poll for results
+      let result = prediction;
       while (result.status !== 'succeeded' && result.status !== 'failed') {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Ждем 1 секунду
+        await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
         const pollResponse = await fetch(prediction.urls.get, {
           headers: {
             'Authorization': `Token ${process.env.REPLICATE_API_TOKEN}`,
           },
         });
         result = await pollResponse.json();
+      }
+      
+      if (result.status === 'failed') {
+        return res.status(500).json({ error: 'Image generation failed', details: result.error });
       }
       
       res.json(result);
