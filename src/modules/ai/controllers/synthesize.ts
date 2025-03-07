@@ -70,13 +70,11 @@ export async function listVoices(req: Request, res: Response) {
     }
 }
 
-
 const clientSpeech = new SpeechClient({
-    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS, // Путь к JSON-ключу
+    credentials: credentials
 });
 
 export async function transcribe(req: Request, res: Response) {
-
     const languageCode = req.body.languageCode;
 
     try {
@@ -85,8 +83,8 @@ export async function transcribe(req: Request, res: Response) {
             return res.status(400).send('No audio file uploaded');
         }
 
-        // Читаем аудиофайл
-        const audioBytes = fs.readFileSync(audioFile.path);
+        // Используем буфер из памяти напрямую вместо чтения файла
+        const audioBytes = audioFile.buffer;
 
         // Конфигурация запроса к Speech-to-Text
         const request = {
@@ -98,7 +96,7 @@ export async function transcribe(req: Request, res: Response) {
                 enableWordTimeOffsets: false,
             },
         };
-        // Отправка запроса к Speech-to-Text
+        
         const [response] = await clientSpeech.recognize(request);
         const transcription = response.results!
             .map(result => result.alternatives![0].transcript)
@@ -107,9 +105,6 @@ export async function transcribe(req: Request, res: Response) {
         if (!transcription) {
             return res.status(400).send('No transcription found');
         }
-
-        // Удаляем временный файл
-        fs.unlinkSync(audioFile.path);
 
         res.json({ transcription });
     } catch (error) {
