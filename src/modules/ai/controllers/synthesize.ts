@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import textToSpeech from '@google-cloud/text-to-speech';
+import { SpeechClient } from '@google-cloud/speech';
+import fs from 'fs';
+import path from 'path';
 
 const credentials = JSON.parse(process.env.GOOGLE_CLOUD_CREDENTIALS || '{}');
 
@@ -66,3 +69,51 @@ export async function listVoices(req: Request, res: Response) {
         });
     }
 }
+
+
+const clientSpeech = new SpeechClient({
+    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS, // Путь к JSON-ключу
+});
+
+export async function transcribe(req: Request, res: Response) {
+
+    const languageCode = req.body.languageCode;
+
+    try {
+        const audioFile = (req as any).file;
+        if (!audioFile) {
+            return res.status(400).send('No audio file uploaded');
+        }
+
+        // Читаем аудиофайл
+        const audioBytes = fs.readFileSync(audioFile.path);
+
+        // Конфигурация запроса к Speech-to-Text
+        const request = {
+            audio: { content: audioBytes.toString('base64') },
+            config: {
+                encoding: 'WEBM_OPUS' as const,
+                sampleRateHertz: 48000,
+                languageCode,
+                enableWordTimeOffsets: false,
+            },
+        };
+        // Отправка запроса к Speech-to-Text
+        const [response] = await clientSpeech.recognize(request);
+        const transcription = response.results!
+            .map(result => result.alternatives![0].transcript)
+            .join('\n');
+
+        if (!transcription) {
+            return res.status(400).send('No transcription found');
+        }
+
+        // Удаляем временный файл
+        fs.unlinkSync(audioFile.path);
+
+        res.json({ transcription });
+    } catch (error) {
+        console.error('Error in transcription:', error);
+        res.status(500).send('Error processing audio');
+    }
+};
