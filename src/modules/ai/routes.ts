@@ -15,7 +15,7 @@ export function createGenerateImageRouter() {
     router.get('/check-status/:id', checkStatus);
     router.post('/synthesize', synthesize);
     router.get('/list-voices', listVoices);
-    router.post('/transcribe', upload.single('audio'), transcribe)
+    // router.post('/transcribe', upload.single('audio'), transcribe)
   
     return router;
   }
