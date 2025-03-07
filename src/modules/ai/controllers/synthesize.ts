@@ -83,8 +83,7 @@ export async function transcribe(req: Request, res: Response) {
             return res.status(400).send('No audio file uploaded');
         }
 
-        // Используем буфер из памяти напрямую вместо чтения файла
-        const audioBytes = audioFile.buffer;
+        const audioBytes = Buffer.from(audioFile.buffer);
 
         // Конфигурация запроса к Speech-to-Text
         const request = {
@@ -92,19 +91,15 @@ export async function transcribe(req: Request, res: Response) {
             config: {
                 encoding: 'WEBM_OPUS' as const,
                 sampleRateHertz: 48000,
-                languageCode,
-                enableWordTimeOffsets: false,
+                languageCode: languageCode.toString(),
+                enableWordTimeOffsets: true,
             },
         };
-        
+
         const [response] = await clientSpeech.recognize(request);
         const transcription = response.results!
             .map(result => result.alternatives![0].transcript)
             .join('\n');
-
-        if (!transcription) {
-            return res.status(400).send('No transcription found');
-        }
 
         res.json({ transcription });
     } catch (error) {
