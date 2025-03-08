@@ -17,11 +17,7 @@ const server = http.createServer(app)
 const io = setupChatSocket(server) // Setup chat socket
 
 app.use(express.json())
-app.use(
-  cors({
-    origin: process.env.ORIGIN_URL,
-  }),
-)
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
