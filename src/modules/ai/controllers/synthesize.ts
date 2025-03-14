@@ -92,7 +92,9 @@ export async function transcribe(req: Request, res: Response) {
                 encoding: 'WEBM_OPUS' as const,
                 sampleRateHertz: 48000,
                 languageCode: languageCode.toString(),
+                alternativeLanguageCodes: ['uk-UA', 'ru-RU', 'en-US'],
                 enableWordTimeOffsets: true,
+                enableAutomaticPunctuation: true,
             },
         };
 
