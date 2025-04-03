@@ -9,7 +9,7 @@ import { createCabinetRouter } from './modules/cabinet/shchus/routes/routes'
 import { errorHandlerMiddleware } from './middleware/error.middleware'
 import http from 'http'
 import { setupChatSocket } from './modules/chats/chat'
-import { createGenerateImageRouter } from './modules/ai/routes'
+import {createAIRouter} from "./modules/ai/routes/routes";
 
 const app = express()
 const server = http.createServer(app)
@@ -21,13 +21,15 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+const { PORT} = process.env
+
 function addApiRoutes() {
   const router = Router({ mergeParams: true })
 
-  router.use('/auth', createAuthRouter())
-  router.use('/cabinet', createCabinetRouter())
-  router.use('/payment', createPaymentRouter())
-  router.use('/generate', createGenerateImageRouter())
+    router.use('/ai', createAIRouter())
+    router.use('/auth', createAuthRouter())
+    router.use('/cabinet', createCabinetRouter())
+    router.use('/payment', createPaymentRouter())
 
   return router
 }
@@ -40,8 +42,8 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use(errorHandlerMiddleware)
 
-server.listen(process.env.PORT || 4000, () => {
-  console.log(`Server listening at http://localhost:${process.env.PORT || 4000}`)
+server.listen(PORT || 4000, () => {
+  console.log(`Server listening at http://localhost:${PORT || 4000}`)
 })
 
 export default app
