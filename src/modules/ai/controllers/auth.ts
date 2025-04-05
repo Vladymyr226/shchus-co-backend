@@ -1,5 +1,5 @@
-import bcrypt from 'bcrypt'
 import { Request, Response } from 'express'
+import bcrypt from 'bcrypt'
 import db from '../../../db/knexKonfig'
 import { generateToken } from '../../../utils/token.utils'
 
@@ -19,7 +19,7 @@ export async function registration(req: Request, res: Response) {
   }
 
   try {
-    const existingUser = await db('users-ai').where({email}).first()
+    const existingUser = await db('users-ai').where({ email }).first()
     if (existingUser) {
       return res.status(200).json({ message: 'User with this email already exists' })
     }
@@ -44,7 +44,7 @@ export async function login(req: Request, res: Response) {
   }
 
   try {
-    const user = await db.select().from('users-ai').where({email})
+    const user = await db.select().from('users-ai').where({ email })
     if (!user[0]) {
       return res.status(200).json({ message: 'The email you entered does not exist!' })
     }
@@ -55,7 +55,7 @@ export async function login(req: Request, res: Response) {
     console.log('token-login ', token)
     return res.status(201).json({ token, user: user[0] })
   } catch (error) {
-    console.error('Error in user.ts', error)
+    console.error('Error in notes.ts', error)
     return res.status(400).json({ message: error })
   }
 }

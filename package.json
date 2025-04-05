@@ -59,6 +59,7 @@
     "@types/node": "^18.14.6",
     "@types/node-fetch": "^2.6.12",
     "nodemon": "^2.0.20",
+    "prettier": "^3.5.3",
     "rimraf": "^3.0.2",
     "ts-node": "^10.9.2",
     "tsx": "^4.11.0"
