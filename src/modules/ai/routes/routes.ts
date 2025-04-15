@@ -26,7 +26,7 @@ import {
 } from '../controllers/notes'
 import { checkStatus, generateImage } from '../controllers/ai'
 import { authMiddleware } from '../middlewares/user.auth'
-import { login, registration } from '../controllers/auth'
+import { forgotPassword, login, registration, resetPassword } from '../controllers/auth'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -40,8 +40,12 @@ export function createAIRouter() {
 
   router.post('/generate/generate-image', generateImage)
   router.get('/generate/check-status/:id', checkStatus)
+  router.post('/forgot-password', forgotPassword)
+  router.post('/reset-password', resetPassword)
+
   router.post('/register', validateSchema(userRegisterSchema), registration)
   router.post('/login', validateSchema(userLoginSchema), login)
+
   router.post('/notes', validateSchema(userNoteSchema), authMiddleware, myNotesPost)
   router.put('/notes', validateSchema(userNoteSchema), authMiddleware, myNotesPut)
   router.delete('/notes/:id', authMiddleware, myNotesDelete)
