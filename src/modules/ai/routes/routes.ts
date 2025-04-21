@@ -27,6 +27,7 @@ import {
 import { checkStatus, generateImage } from '../controllers/ai'
 import { authMiddleware } from '../middlewares/user.auth'
 import { forgotPassword, login, registration, resetPassword } from '../controllers/auth'
+import { myPortfolioDeleteIdea, myPortfolioGet, myPortfolioPost, myPortfolioPut } from '../controllers/portfolio'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -59,6 +60,11 @@ export function createAIRouter() {
   router.put('/deadlines', validateSchema(userDeadlineSchema), authMiddleware, myDeadlinesPut)
   router.delete('/deadlines/:id', authMiddleware, myDeadlinesDelete)
   router.get('/notes-all', authMiddleware, myNotesAll)
+
+  router.get('/ideas', authMiddleware, myPortfolioGet)
+  router.post('/ideas', authMiddleware, myPortfolioPost)
+  router.put('/ideas/:idea_id', authMiddleware, myPortfolioPut)
+  router.delete('/ideas/:idea_id', authMiddleware, myPortfolioDeleteIdea)
 
   return router
 }
