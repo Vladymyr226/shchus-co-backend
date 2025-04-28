@@ -27,6 +27,8 @@ const FIELD_MAPPINGS: Array<{
   transform?: (value: any) => any
 }> = [
   { bodyKey: 'idea', dbKey: 'idea' },
+  { bodyKey: 'text_content', dbKey: 'text_content' },
+  { bodyKey: 'temperature', dbKey: 'temperature' },
   { bodyKey: 'develop_idea_content', dbKey: 'develop_idea_content', transform: toPgArray },
   { bodyKey: 'generated_images', dbKey: 'generated_images', transform: toPgArray },
   { bodyKey: 'model_mvp_content', dbKey: 'model_mvp_content', transform: toPgArray },
