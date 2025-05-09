@@ -9,7 +9,7 @@ import { createCabinetRouter } from './modules/cabinet/shchus/routes/routes'
 import { errorHandlerMiddleware } from './middleware/error.middleware'
 import http from 'http'
 import { setupChatSocket } from './modules/chats/chat'
-import {createAIRouter} from "./modules/ai/routes/routes";
+import { createAIRouter } from './modules/ai/routes/routes'
 
 const app = express()
 const server = http.createServer(app)
@@ -21,15 +21,15 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-const { PORT} = process.env
+const { PORT } = process.env
 
 function addApiRoutes() {
   const router = Router({ mergeParams: true })
 
-    router.use('/ai', createAIRouter())
-    router.use('/auth', createAuthRouter())
-    router.use('/cabinet', createCabinetRouter())
-    router.use('/payment', createPaymentRouter())
+  router.use('/ai', createAIRouter())
+  router.use('/auth', createAuthRouter())
+  router.use('/cabinet', createCabinetRouter())
+  router.use('/payment', createPaymentRouter())
 
   return router
 }

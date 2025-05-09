@@ -1,7 +1,10 @@
 import Joi from 'joi'
 
 export const userRegisterSchema = Joi.object({
-  name: Joi.string().alphanum().min(2).max(32).required().trim(),
+  name: Joi.string()
+    .pattern(/^[а-яА-Яa-zA-Z\-]{2,32}$/)
+    .required()
+    .trim(),
   email: Joi.string().max(40).lowercase().email().required().trim(),
   password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,100}')).trim(),
 })
