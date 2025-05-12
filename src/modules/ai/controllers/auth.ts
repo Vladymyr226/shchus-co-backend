@@ -5,7 +5,9 @@ import { generateToken } from '../../../utils/token.utils'
 import { v4 as uuidv4 } from 'uuid'
 import { redis } from '../../../db/redisConfig'
 import nodemailer from 'nodemailer'
+import { OAuth2Client } from 'google-auth-library'
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -48,8 +50,55 @@ export async function registration(req: Request, res: Response) {
 }
 
 export async function login(req: Request, res: Response) {
-  const { email, password } = req.query
+  const { email, password, google_token } = req.query
 
+  if (google_token) {
+    const ticket = await client.verifyIdToken({
+      idToken: (google_token || '').toString(),
+      audience: process.env.GOOGLE_CLIENT_ID,
+    })
+
+    const payload = ticket.getPayload()
+    const { name, picture, sub, email: emailG } = payload || {}
+
+    try {
+      let user = await db.select().from('users-ai').where({ email: emailG })
+
+      if (user[0]) {
+        const currentUser = user[0]
+
+        if (currentUser.name !== name || currentUser.avatar !== picture || currentUser.google_id !== sub) {
+          user = await db('users-ai')
+            .where({ email: emailG })
+            .update({
+              name,
+              google_id: sub,
+              avatar: picture,
+            })
+            .returning('*')
+        } else {
+          user = [currentUser]
+        }
+      } else {
+        user = await db('users-ai')
+          .insert({
+            name,
+            email: emailG,
+            google_id: sub,
+            avatar: picture,
+          })
+          .returning('*')
+      }
+
+      const token = generateToken(user[0].id)
+      console.log('token-registration', token)
+
+      return res.status(201).json({ token, user: user[0] })
+    } catch (error) {
+      console.error('Error in notes.ts', error)
+      return res.status(400).json({ error })
+    }
+  }
   if (!email || !password) {
     return res.status(400).json({ message: 'All fields are required' })
   }

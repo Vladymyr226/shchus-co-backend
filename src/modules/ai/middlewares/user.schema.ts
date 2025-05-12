@@ -10,8 +10,9 @@ export const userRegisterSchema = Joi.object({
 })
 
 export const userLoginSchema = Joi.object({
-  email: Joi.string().max(40).lowercase().email().required().trim(),
-  password: Joi.string().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,100}')).trim(),
+  email: Joi.string().optional().max(40).lowercase().email().trim(),
+  password: Joi.string().optional().pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,100}')).trim(),
+  google_token: Joi.string().optional(),
 })
 
 export const userNoteSchema = Joi.object({
