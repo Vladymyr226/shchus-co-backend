@@ -11,7 +11,7 @@ export async function registration(req: Request, res: Response) {
     return res.status(400).json({ message: 'All fields are required' })
   }
 
-  const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(7))
+  const hash = bcrypt.hashSync(password.toString(), bcrypt.genSaltSync(7))
 
   const userToDB = {
     first_name: name,
@@ -63,9 +63,7 @@ export async function getUserInfoById(req: Request, res: Response) {
   const { userId } = req.query
 
   try {
-    const getUserInfoById = await db('users')
-      .select('first_name', 'last_name', 'subs_modals')
-      .where('id', userId)
+    const getUserInfoById = await db('users').select('first_name', 'last_name', 'subs_modals').where('id', userId)
 
     return res.status(200).json({ getUserInfoById })
   } catch (error) {
