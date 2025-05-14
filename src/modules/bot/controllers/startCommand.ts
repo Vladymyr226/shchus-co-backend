@@ -13,8 +13,5 @@ export const startCommandBot = async (msg: Message) => {
 
   const { id, username, first_name, last_name } = msg.from
 
-  return bot.sendMessage(
-    chatId,
-    'Надішліть "так", щоб змінити опис послуги, або "ні", щоб перейти до наступного кроку.'
-  )
+  return bot.sendMessage(chatId, 'Привет! Я чат-бот.')
 }

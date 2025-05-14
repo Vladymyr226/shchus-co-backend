@@ -10,14 +10,14 @@ import { errorHandlerMiddleware } from './middleware/error.middleware'
 import http from 'http'
 import { setupChatSocket } from './modules/chats/chat'
 import { createAIRouter } from './modules/ai/routes/routes'
-// import { botCommands } from './modules/bot/bot.commands'
+import { botCommands } from './modules/bot/bot.commands'
 
 const app = express()
 const server = http.createServer(app)
 
 const io = setupChatSocket(server) // Setup chat socket
 
-// botCommands()
+botCommands()
 
 app.use(express.json())
 app.use(cors())
