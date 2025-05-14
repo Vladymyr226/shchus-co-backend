@@ -2,6 +2,7 @@ import { Router } from 'express'
 import multer from 'multer'
 import { validateSchema } from '../../../middleware/validate.schema'
 import {
+  tgBotSchema,
   userDeadlineSchema,
   userGoalSchema,
   userLoginSchema,
@@ -28,6 +29,7 @@ import { checkStatus, generateImage } from '../controllers/ai'
 import { authMiddleware } from '../middlewares/user.auth'
 import { forgotPassword, login, registration, resetPassword } from '../controllers/auth'
 import { myPortfolioDeleteIdea, myPortfolioGet, myPortfolioPost, myPortfolioPut } from '../controllers/portfolio'
+import { tgBotGet, tgBotPost } from '../controllers/bot'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -65,6 +67,9 @@ export function createAIRouter() {
   router.post('/ideas', authMiddleware, myPortfolioPost)
   router.put('/ideas/:idea_id', authMiddleware, myPortfolioPut)
   router.delete('/ideas/:idea_id', authMiddleware, myPortfolioDeleteIdea)
+
+  router.get('/tg-bot', authMiddleware, tgBotGet)
+  router.post('/tg-bot', authMiddleware, validateSchema(tgBotSchema), tgBotPost)
 
   return router
 }
