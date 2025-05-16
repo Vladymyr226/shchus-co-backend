@@ -1,4 +1,5 @@
 import Joi from 'joi'
+import phoneNumber from 'joi-phone-number'
 
 export const userRegisterSchema = Joi.object({
   name: Joi.string()
@@ -41,4 +42,16 @@ export const userDeadlineSchema = Joi.object({
   deadline_id: Joi.number().optional(),
   is_completed: Joi.boolean().optional(),
   date_time_at: Joi.string().optional(),
+})
+
+const customJoi = Joi.extend(phoneNumber)
+
+export const tgBotSchema = Joi.object({
+  phone_number: customJoi
+    .string()
+    .phoneNumber({
+      defaultCountry: 'UA',
+      format: 'international',
+    })
+    .message('Phone number is invalid'),
 })

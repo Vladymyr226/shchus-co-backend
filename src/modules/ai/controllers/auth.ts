@@ -74,6 +74,7 @@ export async function login(req: Request, res: Response) {
               name,
               google_id: sub,
               avatar: picture,
+              updated_at: db.fn.now(),
             })
             .returning('*')
         } else {
