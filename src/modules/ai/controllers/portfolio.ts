@@ -17,7 +17,13 @@ const ALLOWED_PORTFOLIO_TABLES = [
 // Функция для преобразования JavaScript-массива в PostgreSQL-массив
 const toPgArray = (arr: string[] | undefined | null) => {
   if (!arr || arr.length === 0) return null
-  return db.raw(`ARRAY[${arr.map(item => `'${item}'`).join(',')}]::text[]`)
+  // Properly escape each item and handle special characters
+  const escapedValues = arr.map(item => {
+    // Replace single quotes with double quotes and escape special characters
+    const escaped = item.replace(/'/g, "''")
+    return `'${escaped}'`
+  })
+  return db.raw(`ARRAY[${escapedValues.join(',')}]::text[]`)
 }
 
 // Маппинг полей из req.body на поля базы данных
