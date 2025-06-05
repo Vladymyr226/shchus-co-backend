@@ -20,7 +20,10 @@ const toPgArray = (arr: string[] | undefined | null) => {
   // Properly escape each item and handle special characters
   const escapedValues = arr.map(item => {
     // Replace single quotes with double quotes and escape special characters
-    const escaped = item.replace(/'/g, "''")
+    const escaped = item
+      .replace(/\\/g, '\\\\') // Экранируем обратные слэши
+      .replace(/'/g, "''") // Экранируем одинарные кавычки
+      .replace(/\?/g, '\\?') // Экранируем вопросительные знаки
     return `'${escaped}'`
   })
   return db.raw(`ARRAY[${escapedValues.join(',')}]::text[]`)
