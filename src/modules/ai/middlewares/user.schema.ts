@@ -55,3 +55,25 @@ export const tgBotSchema = Joi.object({
     })
     .message('Phone number is invalid'),
 })
+
+export const analyzedFilesSchema = Joi.object({
+  files: Joi.array().items(
+    Joi.object({
+      fileName: Joi.string().required(),
+      fileSize: Joi.number().required(),
+      fileType: Joi.string().required(),
+      s3Url: Joi.string().required(),
+      analysis: Joi.object({
+        summary: Joi.string().required(),
+        tags: Joi.array().items(Joi.string()).required(),
+        category: Joi.string().required(),
+        importance: Joi.number().required(),
+        keyPoints: Joi.array().items(Joi.string()).required(),
+        technicalDetails: Joi.string().optional(),
+        dataPoints: Joi.string().optional()
+      }).required(),
+      isLargeFile: Joi.boolean().required(),
+      totalLines: Joi.number().required()
+    })
+  ).min(1).required()
+})
