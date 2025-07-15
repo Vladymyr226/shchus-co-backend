@@ -2,6 +2,7 @@ import { Router } from 'express'
 import multer from 'multer'
 import { validateSchema } from '../../../middleware/validate.schema'
 import {
+  analyzedFilesSchema,
   tgBotSchema,
   userDeadlineSchema,
   userGoalSchema,
@@ -30,6 +31,12 @@ import { authMiddleware } from '../middlewares/user.auth'
 import { forgotPassword, login, registration, resetPassword } from '../controllers/auth'
 import { myPortfolioDeleteIdea, myPortfolioGet, myPortfolioPost, myPortfolioPut } from '../controllers/portfolio'
 import { tgBotGet, tgBotPost } from '../controllers/bot'
+import { 
+  analyzedFilesPost, 
+  analyzedFilesGet, 
+  analyzedFileGetById, 
+  analyzedFileDelete 
+} from '../controllers/analyzed-files'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -70,6 +77,12 @@ export function createAIRouter() {
 
   router.get('/tg-bot', authMiddleware, tgBotGet)
   router.post('/tg-bot', authMiddleware, validateSchema(tgBotSchema), tgBotPost)
+
+  // Analyzed files routes
+  router.post('/analyzed-files', authMiddleware, validateSchema(analyzedFilesSchema), analyzedFilesPost)
+  router.get('/analyzed-files', authMiddleware, analyzedFilesGet)
+  router.get('/analyzed-files/:id', authMiddleware, analyzedFileGetById)
+  router.delete('/analyzed-files/:id', authMiddleware, analyzedFileDelete)
 
   return router
 }
