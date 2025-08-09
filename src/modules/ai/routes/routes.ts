@@ -35,7 +35,8 @@ import {
   analyzedFilesPost, 
   analyzedFilesGet, 
   analyzedFileGetById, 
-  analyzedFileDelete 
+  analyzedFileDelete,
+  publicAnalyzedFilesGet
 } from '../controllers/analyzed-files'
 
 export function createAIRouter() {
@@ -83,6 +84,9 @@ export function createAIRouter() {
   router.get('/analyzed-files', authMiddleware, analyzedFilesGet)
   router.get('/analyzed-files/:id', authMiddleware, analyzedFileGetById)
   router.delete('/analyzed-files/:id', authMiddleware, analyzedFileDelete)
+  
+  // Public analyzed files route (без авторизации)
+  router.get('/public/analyzed-files', publicAnalyzedFilesGet)
 
   return router
 }
