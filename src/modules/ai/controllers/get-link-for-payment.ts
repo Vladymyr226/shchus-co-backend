@@ -1,25 +1,25 @@
 import crypto from 'crypto'
 
-const publicKey = 'sandbox_i87012785458'
-const privateKey = 'sandbox_deAgn2ZkW8zDyqa40tqICXMxtAJ9pSJoAl0a5b8g'
+const { LIQPAY_PUBLIC_KEY, LIQPAY_PRIVATE_KEY, ORIGIN_URL, LIQPAY_CHECKOUT_URL } = process.env
 
 export const getLinkForPayment = (req, res) => {
-  const { userId, description, plan, price } = req.query
+  const { description, plan, price } = req.query
+  const user_id = req.user_id
 
   const formattedString = 
-    `ID користувача: ${userId || 1}\n` +
+    `ID користувача: ${user_id}\n` +
     `Опис: ${description || 'Lorem ipsum dolor cum totam'}\n` +
     `План: ${plan || 'Pro'}`
 
   const paymentData = {
-    public_key: publicKey,  
+    public_key: LIQPAY_PUBLIC_KEY,
     version: 3,
     action: 'pay',
     amount: price || 19,
     currency: 'USD',
     description: formattedString,
     order_id: Date.now().toString(),
-    result_url: 'https://vision-of-life-ai.vercel.app/',
+    result_url: `${ORIGIN_URL}/`,
   }
 
   console.log(paymentData)
@@ -27,15 +27,23 @@ export const getLinkForPayment = (req, res) => {
   const jsonData = JSON.stringify(paymentData)
   const data = Buffer.from(jsonData).toString('base64')
 
-  const signString = `${privateKey}${data}${privateKey}`
+  const signString = `${LIQPAY_PRIVATE_KEY}${data}${LIQPAY_PRIVATE_KEY}`
 
   const signature = Buffer.from(crypto.createHash('sha1').update(signString).digest()).toString('base64')
 
   res.send(`
-    <form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">
-      <input type="hidden" name="data" value="${data}"/>
-      <input type="hidden" name="signature" value="${signature}"/>
-      <input type="image" src="//static.liqpay.ua/buttons/payUk.png"/>
-    </form>
+      <h2 style="color: white;">Перенаправление на страницу оплаты...</h2>
+      
+      <form id="paymentForm" method="POST" action="${LIQPAY_CHECKOUT_URL}" accept-charset="utf-8" target="_blank">
+        <input type="hidden" name="data" value="${data}"/>
+        <input type="hidden" name="signature" value="${signature}"/>
+        <input type="submit" value="Перейти к оплате" style="display: none;" id="submitBtn">
+      </form>
+      
+      <div id="manualSubmit" style="margin-top: 20px;">
+        <button onclick="document.getElementById('submitBtn').click()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+          Перейти к оплате
+        </button>
+      </div>
   `)
 }

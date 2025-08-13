@@ -90,7 +90,7 @@ export function createAIRouter() {
   router.get('/public/analyzed-files', publicAnalyzedFilesGet)
 
   // Payment routes
-  router.post('/get-link-for-payment', getLinkForPayment)
+  router.post('/get-link-for-payment', authMiddleware, getLinkForPayment)
 
   return router
 }
