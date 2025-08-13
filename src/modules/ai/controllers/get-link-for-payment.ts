@@ -1,32 +1,35 @@
 import crypto from 'crypto'
 
-const publicKey = 'sandbox_i75277326466'
-const privateKey = 'sandbox_AoHz8YjFcImThA6td4EHuzXk0csPArZzoaslqhdg'
+const publicKey = 'sandbox_i87012785458'
+const privateKey = 'sandbox_deAgn2ZkW8zDyqa40tqICXMxtAJ9pSJoAl0a5b8g'
 
-export const liqpay = (req, res) => {
-  const { userId, courseId, description, price } = req.query
+export const getLinkForPayment = (req, res) => {
+  const { userId, description, plan, price } = req.query
 
-  const formattedString = `Описание: ${description}, ID пользователя: ${userId}, ID курса: ${courseId}`
+  const formattedString = 
+    `ID користувача: ${userId || 1}\n` +
+    `Опис: ${description || 'Lorem ipsum dolor cum totam'}\n` +
+    `План: ${plan || 'Pro'}`
 
   const paymentData = {
-    public_key: publicKey,
+    public_key: publicKey,  
     version: 3,
     action: 'pay',
-    amount: price,
+    amount: price || 19,
     currency: 'USD',
     description: formattedString,
     order_id: Date.now().toString(),
-    result_url: `https://www.it-tutor.ai/course-details/?id=${courseId}`,
+    result_url: 'https://vision-of-life-ai.vercel.app/',
   }
+
+  console.log(paymentData)
 
   const jsonData = JSON.stringify(paymentData)
   const data = Buffer.from(jsonData).toString('base64')
 
   const signString = `${privateKey}${data}${privateKey}`
 
-  const signature = Buffer.from(crypto.createHash('sha1').update(signString).digest()).toString(
-    'base64'
-  )
+  const signature = Buffer.from(crypto.createHash('sha1').update(signString).digest()).toString('base64')
 
   res.send(`
     <form method="POST" action="https://www.liqpay.ua/api/3/checkout" accept-charset="utf-8">

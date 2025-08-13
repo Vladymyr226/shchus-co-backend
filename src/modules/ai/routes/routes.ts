@@ -37,6 +37,7 @@ import {
   analyzedFileGetById, 
   analyzedFileDelete 
 } from '../controllers/analyzed-files'
+import { getLinkForPayment } from '../controllers/get-link-for-payment'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -83,6 +84,9 @@ export function createAIRouter() {
   router.get('/analyzed-files', authMiddleware, analyzedFilesGet)
   router.get('/analyzed-files/:id', authMiddleware, analyzedFileGetById)
   router.delete('/analyzed-files/:id', authMiddleware, analyzedFileDelete)
+
+  // Payment routes
+  router.post('/get-link-for-payment', getLinkForPayment)
 
   return router
 }
