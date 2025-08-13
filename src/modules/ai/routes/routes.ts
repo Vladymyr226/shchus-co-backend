@@ -35,7 +35,8 @@ import {
   analyzedFilesPost, 
   analyzedFilesGet, 
   analyzedFileGetById, 
-  analyzedFileDelete 
+  analyzedFileDelete,
+  publicAnalyzedFilesGet
 } from '../controllers/analyzed-files'
 import { getLinkForPayment } from '../controllers/get-link-for-payment'
 
@@ -84,6 +85,9 @@ export function createAIRouter() {
   router.get('/analyzed-files', authMiddleware, analyzedFilesGet)
   router.get('/analyzed-files/:id', authMiddleware, analyzedFileGetById)
   router.delete('/analyzed-files/:id', authMiddleware, analyzedFileDelete)
+  
+  // Public analyzed files route (без авторизации)
+  router.get('/public/analyzed-files', publicAnalyzedFilesGet)
 
   // Payment routes
   router.post('/get-link-for-payment', getLinkForPayment)

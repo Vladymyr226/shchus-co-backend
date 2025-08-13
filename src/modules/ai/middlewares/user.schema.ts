@@ -73,7 +73,8 @@ export const analyzedFilesSchema = Joi.object({
         dataPoints: Joi.string().optional()
       }).required(),
       isLargeFile: Joi.boolean().required(),
-      totalLines: Joi.number().required()
+      totalLines: Joi.number().required(),
+      isPublic: Joi.boolean().required()
     })
   ).min(1).required()
 })
