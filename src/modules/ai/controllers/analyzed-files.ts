@@ -52,13 +52,26 @@ export async function analyzedFilesGet(req: ExpressRequest, res: Response) {
   const user_id = req.user_id
   const { 
     page = 1, 
-    limit = 10
+    limit = 10,
+    search
   } = req.query
 
   try {
-    const query = db('analyzed-files-ai')
+    let query = db('analyzed-files-ai')
       .where({ user_id, is_public: false })
-      .orderBy('importance', 'desc')
+
+    // Поиск по названию файла, тегам, категории или описанию
+    if (search && typeof search === 'string' && search.trim()) {
+      const searchTerm = search.trim()
+      query = query.where(function() {
+        this.whereILike('file_name', `%${searchTerm}%`)
+          .orWhereILike('category', `%${searchTerm}%`)
+          .orWhereILike('summary', `%${searchTerm}%`)
+          .orWhereRaw(`tags::text ILIKE ?`, [`%${searchTerm}%`])
+      })
+    }
+
+    query = query.orderBy('importance', 'desc')
       .orderBy('created_at', 'desc')
 
     // Пагинация
@@ -68,10 +81,21 @@ export async function analyzedFilesGet(req: ExpressRequest, res: Response) {
       .offset(offset)
       .select('*')
 
-    // Получаем общее количество записей для пагинации
-    const [{ count }] = await db('analyzed-files-ai')
+    // Получаем общее количество записей для пагинации с учетом поиска
+    let countQuery = db('analyzed-files-ai')
       .where({ user_id, is_public: false })
-      .count('* as count')
+    
+    if (search && typeof search === 'string' && search.trim()) {
+      const searchTerm = search.trim()
+      countQuery = countQuery.where(function() {
+        this.whereILike('file_name', `%${searchTerm}%`)
+          .orWhereILike('category', `%${searchTerm}%`)
+          .orWhereILike('summary', `%${searchTerm}%`)
+          .orWhereRaw(`tags::text ILIKE ?`, [`%${searchTerm}%`])
+      })
+    }
+    
+    const [{ count }] = await countQuery.count('* as count')
 
     // Парсим JSON поля с безопасной обработкой и форматируем ответ
     const parsedFiles = files.map(file => ({
@@ -196,13 +220,26 @@ export async function analyzedFileDelete(req: ExpressRequest, res: Response) {
 export async function publicAnalyzedFilesGet(req: ExpressRequest, res: Response) {
   const { 
     page = 1, 
-    limit = 10
+    limit = 10,
+    search
   } = req.query
 
   try {
-    const query = db('analyzed-files-ai')
+    let query = db('analyzed-files-ai')
       .where({ is_public: true })
-      .orderBy('importance', 'desc')
+
+    // Поиск по названию файла, тегам, категории или описанию
+    if (search && typeof search === 'string' && search.trim()) {
+      const searchTerm = search.trim()
+      query = query.where(function() {
+        this.whereILike('file_name', `%${searchTerm}%`)
+          .orWhereILike('category', `%${searchTerm}%`)
+          .orWhereILike('summary', `%${searchTerm}%`)
+          .orWhereRaw(`tags::text ILIKE ?`, [`%${searchTerm}%`])
+      })
+    }
+
+    query = query.orderBy('importance', 'desc')
       .orderBy('created_at', 'desc')
 
     // Пагинация
@@ -212,10 +249,21 @@ export async function publicAnalyzedFilesGet(req: ExpressRequest, res: Response)
       .offset(offset)
       .select('*')
 
-    // Получаем общее количество записей для пагинации
-    const [{ count }] = await db('analyzed-files-ai')
+    // Получаем общее количество записей для пагинации с учетом поиска
+    let countQuery = db('analyzed-files-ai')
       .where({ is_public: true })
-      .count('* as count')
+    
+    if (search && typeof search === 'string' && search.trim()) {
+      const searchTerm = search.trim()
+      countQuery = countQuery.where(function() {
+        this.whereILike('file_name', `%${searchTerm}%`)
+          .orWhereILike('category', `%${searchTerm}%`)
+          .orWhereILike('summary', `%${searchTerm}%`)
+          .orWhereRaw(`tags::text ILIKE ?`, [`%${searchTerm}%`])
+      })
+    }
+    
+    const [{ count }] = await countQuery.count('* as count')
 
     // Парсим JSON поля с безопасной обработкой и форматируем ответ
     const parsedFiles = files.map(file => ({
