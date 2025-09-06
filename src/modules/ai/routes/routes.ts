@@ -39,6 +39,17 @@ import {
   publicAnalyzedFilesGet
 } from '../controllers/analyzed-files'
 import { getLinkForPayment } from '../controllers/get-link-for-payment'
+import {
+  getAllSubscriptionItems,
+  getSubscriptionItemById,
+  createSubscriptionItem,
+  updateSubscriptionItem,
+  deleteSubscriptionItem
+} from '../controllers/subscription-items'
+import {
+  subscriptionItemCreateSchema,
+  subscriptionItemUpdateSchema
+} from '../middlewares/subscription-items.schema'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -91,6 +102,13 @@ export function createAIRouter() {
 
   // Payment routes
   router.post('/get-link-for-payment', authMiddleware, getLinkForPayment)
+
+  // Subscription items routes
+  router.get('/subscription-items', getAllSubscriptionItems)
+  router.get('/subscription-items/:id', getSubscriptionItemById)
+  router.post('/subscription-items', validateSchema(subscriptionItemCreateSchema), createSubscriptionItem)
+  router.put('/subscription-items/:id', validateSchema(subscriptionItemUpdateSchema), updateSubscriptionItem)
+  router.delete('/subscription-items/:id', deleteSubscriptionItem)
 
   return router
 }
