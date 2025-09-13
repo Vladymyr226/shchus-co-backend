@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
 import db from '../../../db/knexKonfig'
 
-const paymentStatusById = async (req: Request, res: Response) => {
-  const { userId } = req.query
+const paymentStatusById = async (req, res) => {
+  const userId = req.user_id
 
   try {
     const payment = await db('subscriptions_ai').where({ user_id: userId }).orderBy('id', 'desc').first()
