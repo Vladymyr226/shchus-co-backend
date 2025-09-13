@@ -1,12 +1,11 @@
 import crypto from 'crypto'
+import jwt from 'jsonwebtoken'
 import db from '../../../db/knexKonfig'
 
-const { LIQPAY_PRIVATE_KEY } = process.env
+const { LIQPAY_PRIVATE_KEY, JWT_SECRET } = process.env
 
 export const savePaymentTransaction = async (req, res) => {
   const { data, signature } = req.body
-
-  console.log('data', data)
 
   // Проверка подписи
   const signString = `${LIQPAY_PRIVATE_KEY}${data}${LIQPAY_PRIVATE_KEY}`
@@ -21,12 +20,32 @@ export const savePaymentTransaction = async (req, res) => {
   console.log('Decoded data:', decodedData)
 
   const customDescriptionString = decodedData.description
-  // Регулярное выражение для извлечения данных
-  const regex = /AI: (.*?), ID пользователя: (\d+)/
+
+  // Регулярное выражение для извлечения токена из описания "AI ${token}"
+  const regex = /^AI (.+)$/
   const matches = customDescriptionString.match(regex)
 
-  const description = matches[1]
-  const userId = matches[2]
+  if (!matches) {
+    return res.status(400).send('Invalid description format')
+  }
+
+  const token = matches[1]
+
+  // Декодируем JWT токен для получения user_id
+  let userId
+  try {
+    // Перевіряємо, що секрет для JWT визначений
+    if (!JWT_SECRET) {
+      console.error('JWT_SECRET не визначено у змінних середовища')
+      return res.status(500).send('JWT secret is not configured')
+    }
+
+    const decodedToken = jwt.verify(token, JWT_SECRET as string) as { id?: string | number; userId?: string | number }
+    userId = decodedToken.id || decodedToken.userId
+  } catch (error) {
+    console.error('Помилка декодування токена:', error)
+    return res.status(400).send('Invalid token')
+  }
 
   // Обработка данных о платеже
   if (decodedData.status === 'success') {
@@ -37,7 +56,7 @@ export const savePaymentTransaction = async (req, res) => {
       user_id: parseInt(userId, 10),
       order_time: new Date(decodedData.create_date),
       order_id: decodedData.order_id,
-      description: String(description),
+      description: customDescriptionString,
       price: parseInt(decodedData.amount, 10),
       order_status: String(decodedData.status),
       payment: JSON.stringify(decodedData),
