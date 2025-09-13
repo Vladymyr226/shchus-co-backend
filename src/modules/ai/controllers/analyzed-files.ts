@@ -2,6 +2,58 @@ import { Response } from 'express'
 import db from '../../../db/knexKonfig'
 import { ExpressRequest } from '../middlewares/user.auth'
 
+// Функция транслитерации русских символов в английские
+function transliterate(text: string): string {
+  const translitMap: { [key: string]: string } = {
+    'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo',
+    'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm',
+    'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+    'ф': 'f', 'х': 'h', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'sch',
+    'ъ': '', 'ы': 'y', 'ь': '', 'э': 'e', 'ю': 'yu', 'я': 'ya',
+    'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ё': 'Yo',
+    'Ж': 'Zh', 'З': 'Z', 'И': 'I', 'Й': 'Y', 'К': 'K', 'Л': 'L', 'М': 'M',
+    'Н': 'N', 'О': 'O', 'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T', 'У': 'U',
+    'Ф': 'F', 'Х': 'H', 'Ц': 'Ts', 'Ч': 'Ch', 'Ш': 'Sh', 'Щ': 'Sch',
+    'Ъ': '', 'Ы': 'Y', 'Ь': '', 'Э': 'E', 'Ю': 'Yu', 'Я': 'Ya'
+  }
+  
+  return text.split('').map(char => translitMap[char] || char).join('')
+}
+
+// Функция обратной транслитерации (английские в русские)
+function reverseTransliterate(text: string): string {
+  const reverseTranslitMap: { [key: string]: string } = {
+    'a': 'а', 'b': 'б', 'v': 'в', 'g': 'г', 'd': 'д', 'e': 'е', 'yo': 'ё',
+    'zh': 'ж', 'z': 'з', 'i': 'и', 'y': 'й', 'k': 'к', 'l': 'л', 'm': 'м',
+    'n': 'н', 'o': 'о', 'p': 'п', 'r': 'р', 's': 'с', 't': 'т', 'u': 'у',
+    'f': 'ф', 'h': 'х', 'ts': 'ц', 'ch': 'ч', 'sh': 'ш', 'sch': 'щ',
+    'yu': 'ю', 'ya': 'я',
+    'A': 'А', 'B': 'Б', 'V': 'В', 'G': 'Г', 'D': 'Д', 'E': 'Е', 'Yo': 'Ё',
+    'Zh': 'Ж', 'Z': 'З', 'I': 'И', 'Y': 'Й', 'K': 'К', 'L': 'Л', 'M': 'М',
+    'N': 'Н', 'O': 'О', 'P': 'П', 'R': 'Р', 'S': 'С', 'T': 'Т', 'U': 'У',
+    'F': 'Ф', 'H': 'Х', 'Ts': 'Ц', 'Ch': 'Ч', 'Sh': 'Ш', 'Sch': 'Щ',
+    'Yu': 'Ю', 'Ya': 'Я'
+  }
+  
+  let result = text
+  
+  // Сначала заменяем многосимвольные комбинации (сначала заглавные, потом строчные)
+  for (const [eng, rus] of Object.entries(reverseTranslitMap)) {
+    if (eng.length > 1) {
+      result = result.replace(new RegExp(eng, 'g'), rus)
+    }
+  }
+  
+  // Затем одиночные символы (сначала заглавные, потом строчные)
+  for (const [eng, rus] of Object.entries(reverseTranslitMap)) {
+    if (eng.length === 1) {
+      result = result.replace(new RegExp(eng, 'g'), rus)
+    }
+  }
+  
+  return result
+}
+
 export async function analyzedFilesPost(req: ExpressRequest, res: Response) {
   const { files } = req.body
   const user_id = req.user_id
@@ -50,24 +102,51 @@ export async function analyzedFilesPost(req: ExpressRequest, res: Response) {
 
 export async function analyzedFilesGet(req: ExpressRequest, res: Response) {
   const user_id = req.user_id
-  const { 
-    page = 1, 
+  const {
+    page = 1,
     limit = 10,
-    search
+    search,
+    category
   } = req.query
 
   try {
     let query = db('analyzed-files-ai')
       .where({ user_id, is_public: false })
 
+    // Фильтр по категории
+    if (category && typeof category === 'string' && category.trim()) {
+      const categoryTerm = category.trim()
+      const transliteratedCategory = transliterate(categoryTerm)
+      const reverseTransliteratedCategory = reverseTransliterate(categoryTerm)
+      
+      query = query.where(function() {
+        this.whereILike('category', `%${categoryTerm}%`)
+          .orWhereILike('category', `%${transliteratedCategory}%`)
+          .orWhereILike('category', `%${reverseTransliteratedCategory}%`)
+      })
+    }
+
     // Поиск по названию файла, тегам, категории или описанию
     if (search && typeof search === 'string' && search.trim()) {
       const searchTerm = search.trim()
+      const transliteratedTerm = transliterate(searchTerm)
+      const reverseTransliteratedTerm = reverseTransliterate(searchTerm)
+      
       query = query.where(function() {
         this.whereILike('file_name', `%${searchTerm}%`)
           .orWhereILike('category', `%${searchTerm}%`)
           .orWhereILike('summary', `%${searchTerm}%`)
           .orWhereRaw(`tags::text ILIKE ?`, [`%${searchTerm}%`])
+          // Поиск по транслитерации (русские -> английские)
+          .orWhereILike('file_name', `%${transliteratedTerm}%`)
+          .orWhereILike('category', `%${transliteratedTerm}%`)
+          .orWhereILike('summary', `%${transliteratedTerm}%`)
+          .orWhereRaw(`tags::text ILIKE ?`, [`%${transliteratedTerm}%`])
+          // Поиск по обратной транслитерации (английские -> русские)
+          .orWhereILike('file_name', `%${reverseTransliteratedTerm}%`)
+          .orWhereILike('category', `%${reverseTransliteratedTerm}%`)
+          .orWhereILike('summary', `%${reverseTransliteratedTerm}%`)
+          .orWhereRaw(`tags::text ILIKE ?`, [`%${reverseTransliteratedTerm}%`])
       })
     }
 
@@ -221,21 +300,48 @@ export async function publicAnalyzedFilesGet(req: ExpressRequest, res: Response)
   const { 
     page = 1, 
     limit = 10,
-    search
+    search,
+    category
   } = req.query
 
   try {
     let query = db('analyzed-files-ai')
       .where({ is_public: true })
 
+    // Фильтр по категории
+    if (category && typeof category === 'string' && category.trim()) {
+      const categoryTerm = category.trim()
+      const transliteratedCategory = transliterate(categoryTerm)
+      const reverseTransliteratedCategory = reverseTransliterate(categoryTerm)
+      
+      query = query.where(function() {
+        this.whereILike('category', `%${categoryTerm}%`)
+          .orWhereILike('category', `%${transliteratedCategory}%`)
+          .orWhereILike('category', `%${reverseTransliteratedCategory}%`)
+      })
+    }
+
     // Поиск по названию файла, тегам, категории или описанию
     if (search && typeof search === 'string' && search.trim()) {
       const searchTerm = search.trim()
+      const transliteratedTerm = transliterate(searchTerm)
+      const reverseTransliteratedTerm = reverseTransliterate(searchTerm)
+      
       query = query.where(function() {
         this.whereILike('file_name', `%${searchTerm}%`)
           .orWhereILike('category', `%${searchTerm}%`)
           .orWhereILike('summary', `%${searchTerm}%`)
           .orWhereRaw(`tags::text ILIKE ?`, [`%${searchTerm}%`])
+          // Поиск по транслитерации (русские -> английские)
+          .orWhereILike('file_name', `%${transliteratedTerm}%`)
+          .orWhereILike('category', `%${transliteratedTerm}%`)
+          .orWhereILike('summary', `%${transliteratedTerm}%`)
+          .orWhereRaw(`tags::text ILIKE ?`, [`%${transliteratedTerm}%`])
+          // Поиск по обратной транслитерации (английские -> русские)
+          .orWhereILike('file_name', `%${reverseTransliteratedTerm}%`)
+          .orWhereILike('category', `%${reverseTransliteratedTerm}%`)
+          .orWhereILike('summary', `%${reverseTransliteratedTerm}%`)
+          .orWhereRaw(`tags::text ILIKE ?`, [`%${reverseTransliteratedTerm}%`])
       })
     }
 

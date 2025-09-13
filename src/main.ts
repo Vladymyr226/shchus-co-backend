@@ -3,7 +3,6 @@ import bodyParser from 'body-parser'
 import { createAuthRouter } from './modules/auth/routes/routes'
 import cors from 'cors'
 import { Router } from 'express'
-import { createPaymentRouter } from './modules/payment/routes/payment'
 import './configs/dotenv.config'
 import { createCabinetRouter } from './modules/cabinet/shchus/routes/routes'
 import { errorHandlerMiddleware } from './middleware/error.middleware'
@@ -29,7 +28,6 @@ function addApiRoutes() {
   router.use('/ai', createAIRouter())
   router.use('/auth', createAuthRouter())
   router.use('/cabinet', createCabinetRouter())
-  router.use('/payment', createPaymentRouter())
 
   return router
 }
