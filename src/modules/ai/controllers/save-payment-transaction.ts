@@ -17,7 +17,6 @@ export const savePaymentTransaction = async (req, res) => {
 
   // Декодирование и обработка данных
   const decodedData = JSON.parse(Buffer.from(data, 'base64').toString('utf-8'))
-  console.log('Decoded data:', decodedData)
 
   const customDescriptionString = decodedData.description
 
@@ -54,7 +53,19 @@ export const savePaymentTransaction = async (req, res) => {
 
     const paymentToDB = {
       user_id: parseInt(userId, 10),
-      order_time: new Date(decodedData.create_date),
+      // Перетворюємо час у часовий пояс України (Europe/Kyiv) та форматуємо у вигляді 'YYYY-MM-DD HH:mm:ss'
+      order_time: new Date(decodedData.create_date)
+        .toLocaleString('uk-UA', {
+          timeZone: 'Europe/Kyiv',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        })
+        .replace(/(\d{2})\.(\d{2})\.(\d{4}), (\d{2}):(\d{2}):(\d{2})/, '$3-$2-$1 $4:$5:$6'),
       order_id: decodedData.order_id,
       description: customDescriptionString,
       price: parseInt(decodedData.amount, 10),
