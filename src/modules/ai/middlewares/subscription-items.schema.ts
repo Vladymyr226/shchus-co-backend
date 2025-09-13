@@ -17,3 +17,7 @@ export const subscriptionItemUpdateSchema = Joi.object({
   price: Joi.number().precision(3).positive().optional(),
   dimension: Joi.string().max(50).optional().trim()
 })
+
+export const deductAmountSchema = Joi.object({
+  amount: Joi.number().precision(3).positive().required()
+})

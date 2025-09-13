@@ -46,9 +46,9 @@ import {
   updateSubscriptionItem,
   deleteSubscriptionItem,
 } from '../controllers/subscription-items'
-import { subscriptionItemCreateSchema, subscriptionItemUpdateSchema } from '../middlewares/subscription-items.schema'
+import { subscriptionItemCreateSchema, subscriptionItemUpdateSchema, deductAmountSchema } from '../middlewares/subscription-items.schema'
 import { savePaymentTransaction } from '../controllers/save-payment-transaction'
-import { paymentStatusById } from '../controllers/payment-status'
+import { paymentStatusById, deductAmount } from '../controllers/payment-status'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -103,6 +103,7 @@ export function createAIRouter() {
   router.post('/get-link-for-payment', authMiddleware, getLinkForPayment)
   router.post('/save-payment-transaction', savePaymentTransaction)
   router.get('/payment-status-by-id', authMiddleware, paymentStatusById)
+  router.post('/deduct-amount', authMiddleware, validateSchema(deductAmountSchema), deductAmount)
 
   // Subscription items routes
   router.get('/subscription-items', getAllSubscriptionItems)
