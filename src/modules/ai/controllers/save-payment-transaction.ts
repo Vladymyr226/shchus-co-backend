@@ -2,7 +2,7 @@ import crypto from 'crypto'
 import jwt from 'jsonwebtoken'
 import db from '../../../db/knexKonfig'
 
-const { LIQPAY_PRIVATE_KEY, JWT_SECRET } = process.env
+const { LIQPAY_PRIVATE_KEY, SECRET } = process.env
 
 export const savePaymentTransaction = async (req, res) => {
   const { data, signature } = req.body
@@ -35,12 +35,12 @@ export const savePaymentTransaction = async (req, res) => {
   let userId
   try {
     // Перевіряємо, що секрет для JWT визначений
-    if (!JWT_SECRET) {
+    if (!SECRET) {
       console.error('JWT_SECRET не визначено у змінних середовища')
       return res.status(500).send('JWT secret is not configured')
     }
 
-    const decodedToken = jwt.verify(token, JWT_SECRET as string) as { id?: string | number; userId?: string | number }
+    const decodedToken = jwt.verify(token, SECRET as string) as { id?: string | number; userId?: string | number }
     userId = decodedToken.id || decodedToken.userId
   } catch (error) {
     console.error('Помилка декодування токена:', error)
