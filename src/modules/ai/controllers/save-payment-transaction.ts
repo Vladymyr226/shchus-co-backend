@@ -63,7 +63,7 @@ export const savePaymentTransaction = async (req, res) => {
     }
 
     try {
-      const payment = await db('subscriptions').insert(paymentToDB).returning('*')
+      const payment = await db('subscriptions_ai').insert(paymentToDB).returning('*')
       console.log('Payment saved to DB:', payment)
       return res.status(201).json({ message: 'Payment saved successfully' })
     } catch (error) {
