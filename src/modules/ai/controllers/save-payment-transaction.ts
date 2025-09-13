@@ -6,6 +6,8 @@ const { LIQPAY_PRIVATE_KEY } = process.env
 export const savePaymentTransaction = async (req, res) => {
   const { data, signature } = req.body
 
+  console.log('data', data)
+
   // Проверка подписи
   const signString = `${LIQPAY_PRIVATE_KEY}${data}${LIQPAY_PRIVATE_KEY}`
   const expectedSignature = crypto.createHash('sha1').update(signString).digest('base64')

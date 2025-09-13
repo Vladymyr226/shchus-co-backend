@@ -4,7 +4,7 @@ const { LIQPAY_PUBLIC_KEY, LIQPAY_PRIVATE_KEY, ORIGIN_URL, LIQPAY_CHECKOUT_URL }
 
 export const getLinkForPayment = (req, res) => {
   const { price } = req.query
-  const user_id = req.user_id
+  const token = req.headers.authorization.split(' ')[1]
 
   const paymentData = {
     public_key: LIQPAY_PUBLIC_KEY,
@@ -12,7 +12,7 @@ export const getLinkForPayment = (req, res) => {
     action: 'pay',
     amount: price,
     currency: 'USD',
-    description: `AI ${user_id}`,
+    description: `AI ${token}`,
     order_id: Date.now().toString(),
     result_url: `${ORIGIN_URL}/`,
   }
