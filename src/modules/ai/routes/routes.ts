@@ -31,12 +31,12 @@ import { authMiddleware } from '../middlewares/user.auth'
 import { forgotPassword, login, registration, resetPassword } from '../controllers/auth'
 import { myPortfolioDeleteIdea, myPortfolioGet, myPortfolioPost, myPortfolioPut } from '../controllers/portfolio'
 import { tgBotGet, tgBotPost } from '../controllers/bot'
-import { 
-  analyzedFilesPost, 
-  analyzedFilesGet, 
-  analyzedFileGetById, 
+import {
+  analyzedFilesPost,
+  analyzedFilesGet,
+  analyzedFileGetById,
   analyzedFileDelete,
-  publicAnalyzedFilesGet
+  publicAnalyzedFilesGet,
 } from '../controllers/analyzed-files'
 import { getLinkForPayment } from '../controllers/get-link-for-payment'
 import {
@@ -44,12 +44,10 @@ import {
   getSubscriptionItemById,
   createSubscriptionItem,
   updateSubscriptionItem,
-  deleteSubscriptionItem
+  deleteSubscriptionItem,
 } from '../controllers/subscription-items'
-import {
-  subscriptionItemCreateSchema,
-  subscriptionItemUpdateSchema
-} from '../middlewares/subscription-items.schema'
+import { subscriptionItemCreateSchema, subscriptionItemUpdateSchema } from '../middlewares/subscription-items.schema'
+import { savePaymentTransaction } from '../controllers/save-payment-transaction'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -96,12 +94,13 @@ export function createAIRouter() {
   router.get('/analyzed-files', authMiddleware, analyzedFilesGet)
   router.get('/analyzed-files/:id', authMiddleware, analyzedFileGetById)
   router.delete('/analyzed-files/:id', authMiddleware, analyzedFileDelete)
-  
+
   // Public analyzed files route (без авторизации)
   router.get('/public/analyzed-files', publicAnalyzedFilesGet)
 
   // Payment routes
   router.post('/get-link-for-payment', authMiddleware, getLinkForPayment)
+  router.post('/save-payment-transaction', authMiddleware, savePaymentTransaction)
 
   // Subscription items routes
   router.get('/subscription-items', getAllSubscriptionItems)

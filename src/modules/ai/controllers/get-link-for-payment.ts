@@ -3,21 +3,16 @@ import crypto from 'crypto'
 const { LIQPAY_PUBLIC_KEY, LIQPAY_PRIVATE_KEY, ORIGIN_URL, LIQPAY_CHECKOUT_URL } = process.env
 
 export const getLinkForPayment = (req, res) => {
-  const { description, plan, price } = req.query
+  const { price } = req.query
   const user_id = req.user_id
-
-  const formattedString = 
-    `ID користувача: ${user_id}\n` +
-    `Опис: ${description || 'Lorem ipsum dolor cum totam'}\n` +
-    `План: ${plan || 'Pro'}`
 
   const paymentData = {
     public_key: LIQPAY_PUBLIC_KEY,
     version: 3,
     action: 'pay',
-    amount: price || 19,
+    amount: price,
     currency: 'USD',
-    description: formattedString,
+    description: `AI ${user_id}`,
     order_id: Date.now().toString(),
     result_url: `${ORIGIN_URL}/`,
   }
@@ -32,8 +27,6 @@ export const getLinkForPayment = (req, res) => {
   const signature = Buffer.from(crypto.createHash('sha1').update(signString).digest()).toString('base64')
 
   res.send(`
-      <h2 style="color: white;">Перенаправление на страницу оплаты...</h2>
-      
       <form id="paymentForm" method="POST" action="${LIQPAY_CHECKOUT_URL}" accept-charset="utf-8" target="_blank">
         <input type="hidden" name="data" value="${data}"/>
         <input type="hidden" name="signature" value="${signature}"/>

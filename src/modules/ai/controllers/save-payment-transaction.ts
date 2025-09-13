@@ -1,13 +1,13 @@
 import crypto from 'crypto'
 import db from '../../../db/knexKonfig'
 
-const privateKey = 'sandbox_AoHz8YjFcImThA6td4EHuzXk0csPArZzoaslqhdg'
+const { LIQPAY_PRIVATE_KEY } = process.env
 
-export const savePaymentObj = async (req, res) => {
+export const savePaymentTransaction = async (req, res) => {
   const { data, signature } = req.body
 
   // Проверка подписи
-  const signString = `${privateKey}${data}${privateKey}`
+  const signString = `${LIQPAY_PRIVATE_KEY}${data}${LIQPAY_PRIVATE_KEY}`
   const expectedSignature = crypto.createHash('sha1').update(signString).digest('base64')
 
   if (signature !== expectedSignature) {
@@ -20,18 +20,19 @@ export const savePaymentObj = async (req, res) => {
 
   const customDescriptionString = decodedData.description
   // Регулярное выражение для извлечения данных
-  const regex = /Описание: (.*?), ID пользователя: (\d+), ID курса: (\d+)/
+  const regex = /AI: (.*?), ID пользователя: (\d+)/
   const matches = customDescriptionString.match(regex)
 
   const description = matches[1]
   const userId = matches[2]
-  const courseId = matches[3]
 
   // Обработка данных о платеже
   if (decodedData.status === 'success') {
+    console.log('Payment was successful:', decodedData.status)
+    console.log('Payment data:', decodedData)
+
     const paymentToDB = {
       user_id: parseInt(userId, 10),
-      course_id: parseInt(courseId, 10),
       order_time: new Date(decodedData.create_date),
       order_id: decodedData.order_id,
       description: String(description),
