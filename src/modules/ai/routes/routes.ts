@@ -100,7 +100,7 @@ export function createAIRouter() {
 
   // Payment routes
   router.post('/get-link-for-payment', authMiddleware, getLinkForPayment)
-  router.post('/save-payment-transaction', authMiddleware, savePaymentTransaction)
+  router.post('/save-payment-transaction', savePaymentTransaction)
 
   // Subscription items routes
   router.get('/subscription-items', getAllSubscriptionItems)
