@@ -68,8 +68,17 @@ export const savePaymentTransaction = async (req, res) => {
     }
 
     try {
+      // Зберігаємо платіж
       const payment = await db('subscriptions_ai').insert(paymentToDB).returning('*')
       console.log('Payment saved to DB:', payment)
+
+      // Оновлюємо загальну суму користувача
+      const paymentAmount = parseInt(decodedData.amount, 10)
+      await db('users-ai')
+        .where({ id: userId })
+        .increment('total_amount', paymentAmount)
+
+      console.log(`Updated user ${userId} total_amount by ${paymentAmount}`)
       return res.status(201).json({ message: 'Payment saved successfully' })
     } catch (error) {
       console.error('Error saving payment to DB:', error)
