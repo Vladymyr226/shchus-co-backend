@@ -62,7 +62,7 @@ export const savePaymentTransaction = async (req, res) => {
         .replace(/(\d{2})\.(\d{2})\.(\d{4}), (\d{2}):(\d{2}):(\d{2})/, '$3-$2-$1 $4:$5:$6'),
       order_id: decodedData.order_id,
       description: customDescriptionString,
-      price: parseInt(decodedData.amount, 10),
+      price: parseFloat(decodedData.amount),
       order_status: String(decodedData.status),
       payment: JSON.stringify(decodedData),
     }
@@ -73,7 +73,7 @@ export const savePaymentTransaction = async (req, res) => {
       console.log('Payment saved to DB:', payment)
 
       // Оновлюємо загальну суму користувача
-      const paymentAmount = parseInt(decodedData.amount, 10)
+      const paymentAmount = parseFloat(decodedData.amount)
       await db('users-ai')
         .where({ id: userId })
         .increment('total_amount', paymentAmount)
