@@ -68,6 +68,18 @@ export const savePaymentTransaction = async (req, res) => {
     }
 
     try {
+      // Перевіряємо, чи не існує вже такий платіж
+      const existingPayment = await db('subscriptions_ai')
+        .where({ 
+          order_id: decodedData.order_id
+        })
+        .first()
+
+      if (existingPayment) {
+        console.log('Payment already exists:', existingPayment)
+        return res.status(200).json({ message: 'Payment already processed' })
+      }
+
       // Зберігаємо платіж
       const payment = await db('subscriptions_ai').insert(paymentToDB).returning('*')
       console.log('Payment saved to DB:', payment)
