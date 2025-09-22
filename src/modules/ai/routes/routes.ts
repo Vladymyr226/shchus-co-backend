@@ -46,9 +46,14 @@ import {
   updateSubscriptionItem,
   deleteSubscriptionItem,
 } from '../controllers/subscription-items'
-import { subscriptionItemCreateSchema, subscriptionItemUpdateSchema, deductAmountSchema } from '../middlewares/subscription-items.schema'
+import {
+  subscriptionItemCreateSchema,
+  subscriptionItemUpdateSchema,
+  deductAmountSchema,
+} from '../middlewares/subscription-items.schema'
 import { savePaymentTransaction } from '../controllers/save-payment-transaction'
 import { paymentStatusById, deductAmount, getUserTotalAmount } from '../controllers/payment-status'
+import { getResumes, createResume } from '../controllers/resumes'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -111,6 +116,10 @@ export function createAIRouter() {
   router.post('/subscription-items', validateSchema(subscriptionItemCreateSchema), createSubscriptionItem)
   router.put('/subscription-items/:id', validateSchema(subscriptionItemUpdateSchema), updateSubscriptionItem)
   router.delete('/subscription-items/:id', deleteSubscriptionItem)
+
+  //Resume routes
+  router.get('/resumes', authMiddleware, getResumes)
+  router.post('/resume', authMiddleware, createResume)
 
   return router
 }
