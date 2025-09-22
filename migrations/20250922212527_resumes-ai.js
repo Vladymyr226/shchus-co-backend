@@ -1,6 +1,7 @@
 exports.up = async function (knex) {
   return knex.schema.createTable('resumes_ai', function (table) {
     table.increments('id').primary()
+    table.integer('user_id').notNullable()
     table.string('templateId', 50).notNullable()
     table.json('resumeData').notNullable()
     table.timestamp('created_at').defaultTo(knex.fn.now())
