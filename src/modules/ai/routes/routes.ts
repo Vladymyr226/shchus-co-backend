@@ -53,7 +53,7 @@ import {
 } from '../middlewares/subscription-items.schema'
 import { savePaymentTransaction } from '../controllers/save-payment-transaction'
 import { paymentStatusById, deductAmount, getUserTotalAmount } from '../controllers/payment-status'
-import { getResumes, createResume } from '../controllers/resumes'
+import { getResumes, createResume, deleteResume } from '../controllers/resumes'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -120,6 +120,7 @@ export function createAIRouter() {
   //Resume routes
   router.get('/resumes', authMiddleware, getResumes)
   router.post('/resume', authMiddleware, createResume)
+  router.delete('/resume', authMiddleware, deleteResume)
 
   return router
 }

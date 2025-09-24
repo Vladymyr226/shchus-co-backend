@@ -26,3 +26,15 @@ export async function createResume(req: ExpressRequest, res: Response) {
     return res.status(500).json({ message: 'Internal Server Error' })
   }
 }
+
+export async function deleteResume(req: ExpressRequest, res: Response) {
+  const { id } = req.params
+
+  try {
+    await db('resumes_ai').where({ id }).delete()
+    return res.status(200).json({ message: 'Resume deleted' })
+  } catch (error) {
+    console.error('Error in resumes.ts', error)
+    return res.status(500).json({ message: 'Internal Server Error' })
+  }
+}
