@@ -9,11 +9,22 @@ import { errorHandlerMiddleware } from './middleware/error.middleware'
 import http from 'http'
 import { setupChatSocket } from './modules/chats/chat'
 import { createAIRouter } from './modules/ai/routes/routes'
+import { Server } from 'socket.io'
+import { setupChatWebSocket } from './modules/ai/websocket/chat.websocket'
 
 const app = express()
 const server = http.createServer(app)
 
-const io = setupChatSocket(server) // Setup chat socket
+// Setup Socket.IO for both old and new chat systems
+const io = new Server(server, {
+  cors: {
+    origin: process.env.ORIGIN_URL || 'http://localhost:3000',
+    credentials: true,
+  },
+})
+
+// const oldChatIo = setupChatSocket(server) // Old chat socket (legacy)
+setupChatWebSocket(io) // New chat WebSocket for AI module
 
 app.use(express.json())
 app.use(cors())
