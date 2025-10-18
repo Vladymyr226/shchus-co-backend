@@ -54,6 +54,17 @@ import {
 import { savePaymentTransaction } from '../controllers/save-payment-transaction'
 import { paymentStatusById, deductAmount, getUserTotalAmount } from '../controllers/payment-status'
 import { getResumes, createResume, deleteResume } from '../controllers/resumes'
+import {
+  getUserChats,
+  getOrCreateChat,
+  getChatMessages,
+  sendMessage,
+  deleteChat,
+  markChatAsRead,
+  getUserById,
+  searchUsers,
+} from '../controllers/chat'
+import { createChatSchema, sendMessageSchema } from '../middlewares/chat.schema'
 
 export function createAIRouter() {
   const router = Router({ mergeParams: true })
@@ -121,6 +132,18 @@ export function createAIRouter() {
   router.get('/resumes', authMiddleware, getResumes)
   router.post('/resume', authMiddleware, createResume)
   router.delete('/resume', authMiddleware, deleteResume)
+
+  // Chat routes
+  router.get('/chats', authMiddleware, getUserChats)
+  router.post('/chats', authMiddleware, validateSchema(createChatSchema), getOrCreateChat)
+  router.get('/chats/:chatId/messages', authMiddleware, getChatMessages)
+  router.post('/chats/:chatId/messages', authMiddleware, validateSchema(sendMessageSchema), sendMessage)
+  router.delete('/chats/:chatId', authMiddleware, deleteChat)
+  router.put('/chats/:chatId/read', authMiddleware, markChatAsRead)
+  
+  // User routes
+  router.get('/users/:userId', authMiddleware, getUserById)
+  router.get('/users/search', authMiddleware, searchUsers)
 
   return router
 }
