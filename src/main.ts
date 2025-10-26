@@ -56,4 +56,23 @@ server.listen(PORT || 4000, () => {
   console.log(`Server listening at http://localhost:${PORT || 4000}`)
 })
 
+// Graceful shutdown для Telegram бота
+process.on('SIGTERM', () => {
+  console.log('SIGTERM received, shutting down gracefully')
+  const bot = require('./modules/common/bot').default()
+  if (bot && bot.stopPolling) {
+    bot.stopPolling()
+  }
+  process.exit(0)
+})
+
+process.on('SIGINT', () => {
+  console.log('SIGINT received, shutting down gracefully')
+  const bot = require('./modules/common/bot').default()
+  if (bot && bot.stopPolling) {
+    bot.stopPolling()
+  }
+  process.exit(0)
+})
+
 export default app
