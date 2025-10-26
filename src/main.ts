@@ -11,9 +11,12 @@ import { setupChatSocket } from './modules/chats/chat'
 import { createAIRouter } from './modules/ai/routes/routes'
 import { Server } from 'socket.io'
 import { setupChatWebSocket } from './modules/ai/websocket/chat.websocket'
+import { botCommands } from './modules/bot/bot.commands'
+import { configureHealthCheckRouter } from './modules/common/routes/healthcheck.routes'
 
 const app = express()
 const server = http.createServer(app)
+botCommands()
 
 // Setup Socket.IO for both old and new chat systems
 const io = new Server(server, {
@@ -45,9 +48,7 @@ function addApiRoutes() {
 
 app.use('/api', addApiRoutes())
 
-app.get('/', (req: Request, res: Response) => {
-  res.status(200).json('Health check works!')
-})
+configureHealthCheckRouter(app)
 
 app.use(errorHandlerMiddleware)
 
