@@ -53,7 +53,7 @@ configureHealthCheckRouter(app)
 app.use(errorHandlerMiddleware)
 
 server.listen(PORT || 4000, () => {
-  console.log(`Server listening at http://localhost:${PORT || 4000}`)
+  console.log(`Server listening at PORT:${PORT || 4000}`)
 })
 
 // Graceful shutdown для Telegram бота

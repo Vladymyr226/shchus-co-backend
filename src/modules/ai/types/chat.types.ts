@@ -55,3 +55,61 @@ export interface ChatHistoryResponse {
   offset: number
 }
 
+// Типи для загальних чатів
+export interface PublicChat {
+  id: number
+  name: string
+  slug: string
+  description?: string
+  icon?: string
+  color: string
+  is_active: boolean
+  max_members: number
+  created_at: Date
+  updated_at: Date
+}
+
+export interface PublicChatWithDetails extends PublicChat {
+  lastMessage?: {
+    id: number
+    content: string
+    senderName: string
+    senderAvatar?: string
+    timestamp: Date
+  }
+  todayMessagesCount: number
+}
+
+export interface PublicChatMessage {
+  id: number
+  public_chat_id: number
+  sender_id: number
+  content: string
+  is_pinned: boolean
+  reply_to_id?: number
+  created_at: Date
+}
+
+export interface PublicChatMessageResponse {
+  id: number
+  publicChatId: number
+  content: string
+  senderId: number
+  senderName: string
+  senderAvatar?: string
+  isPinned: boolean
+  replyTo?: {
+    id: number
+    content: string
+    senderName: string
+  }
+  timestamp: Date
+}
+
+export interface PublicChatStats {
+  totalMessages: number
+  uniqueSenders: number
+  messagesToday: number
+  messagesWeek: number
+}
+

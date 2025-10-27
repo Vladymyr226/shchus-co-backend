@@ -64,6 +64,11 @@ import {
   getUserById,
   searchUsers,
 } from '../controllers/chat'
+import {
+  getPublicChatBySlug,
+  togglePinMessage,
+  getPublicChatStats,
+} from '../controllers/public-chat'
 import { createChatSchema, sendMessageSchema } from '../middlewares/chat.schema'
 
 export function createAIRouter() {
@@ -144,6 +149,11 @@ export function createAIRouter() {
   // User routes
   router.get('/users/:userId', authMiddleware, getUserById)
   router.get('/users/search', authMiddleware, searchUsers)
+
+  // Public chat routes (тільки необхідні, без WebSocket дублікатів)
+  router.get('/public-chats/:slug', authMiddleware, getPublicChatBySlug)
+  router.put('/public-chats/messages/:messageId/pin', authMiddleware, togglePinMessage)
+  router.get('/public-chats/:slug/stats', authMiddleware, getPublicChatStats)
 
   return router
 }
