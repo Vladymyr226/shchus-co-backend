@@ -363,6 +363,266 @@ export const setupChatWebSocket = (io: Server) => {
       }
     })
 
+    // ========== ЗАГАЛЬНІ ЧАТИ ==========
+
+    // Підключення до загального чату
+    socket.on('join_public_chat', async (data: { slug: string }) => {
+      console.log(`[WebSocket] join_public_chat request from user ${socket.userId} for chat ${data.slug}`)
+      try {
+        const { slug } = data
+
+        // Перевіряємо, чи існує загальний чат
+        const publicChat = await knex('public_chats_ai')
+          .where('slug', slug)
+          .where('is_active', true)
+          .first()
+
+        if (!publicChat) {
+          socket.emit('error', { message: 'Public chat not found' })
+          return
+        }
+
+        // Приєднуємося до кімнати загального чату
+        socket.join(`public_chat:${publicChat.id}`)
+
+        // Відправляємо підтвердження
+        socket.emit('public_chat_joined', {
+          type: 'public_chat_joined',
+          chat: publicChat,
+        })
+
+        console.log(`[WebSocket] User ${socket.userId} joined public chat ${slug}`)
+      } catch (error) {
+        console.error(`[WebSocket] Error joining public chat for user ${socket.userId}:`, error)
+        socket.emit('error', { message: 'Failed to join public chat' })
+      }
+    })
+
+    // Відключення від загального чату
+    socket.on('leave_public_chat', async (data: { slug: string }) => {
+      console.log(`[WebSocket] leave_public_chat request from user ${socket.userId} for chat ${data.slug}`)
+      try {
+        const { slug } = data
+
+        const publicChat = await knex('public_chats_ai')
+          .where('slug', slug)
+          .where('is_active', true)
+          .first()
+
+        if (publicChat) {
+          socket.leave(`public_chat:${publicChat.id}`)
+          socket.emit('public_chat_left', {
+            type: 'public_chat_left',
+            chatId: publicChat.id,
+          })
+        }
+      } catch (error) {
+        console.error(`[WebSocket] Error leaving public chat for user ${socket.userId}:`, error)
+      }
+    })
+
+    // Відправка повідомлення в загальний чат
+    socket.on('public_chat_message', async (data: { slug: string; content: string; replyToId?: number }) => {
+      console.log(`[WebSocket] public_chat_message from user ${socket.userId} in chat ${data.slug}`)
+      try {
+        const { slug, content, replyToId } = data
+        const senderId = socket.userId!
+
+        // Перевіряємо, чи існує загальний чат
+        const publicChat = await knex('public_chats_ai')
+          .where('slug', slug)
+          .where('is_active', true)
+          .first()
+
+        if (!publicChat) {
+          socket.emit('error', { message: 'Public chat not found' })
+          return
+        }
+
+        // Перевіряємо, чи користувач в кімнаті
+        const rooms = Array.from(socket.rooms)
+        if (!rooms.includes(`public_chat:${publicChat.id}`)) {
+          socket.emit('error', { message: 'You must join the chat first' })
+          return
+        }
+
+        // Перевіряємо, чи існує повідомлення для відповіді
+        let replyToIdValid: number | null = null
+        if (replyToId) {
+          const replyMessage = await knex('public_chat_messages_ai')
+            .where('id', replyToId)
+            .where('public_chat_id', publicChat.id)
+            .first()
+
+          if (replyMessage) {
+            replyToIdValid = replyToId
+          }
+        }
+
+        // Зберігаємо повідомлення
+        const [message] = await knex('public_chat_messages_ai')
+          .insert({
+            public_chat_id: publicChat.id,
+            sender_id: senderId,
+            content: content.trim(),
+            reply_to_id: replyToIdValid,
+          })
+          .returning('*')
+
+        // Отримуємо інформацію про відправника
+        const sender = await knex('users-ai')
+          .select('id', 'name', 'avatar')
+          .where('id', senderId)
+          .first()
+
+        // Формуємо повідомлення для відправки
+        const messageData = {
+          type: 'public_chat_message',
+          id: message.id,
+          publicChatId: message.public_chat_id,
+          content: message.content,
+          senderId: message.sender_id,
+          senderName: sender.name,
+          senderAvatar: sender.avatar,
+          isPinned: message.is_pinned,
+          replyTo: replyToIdValid ? {
+            id: replyToIdValid,
+            content: message.reply_content,
+            senderName: message.reply_sender_name
+          } : null,
+          timestamp: message.created_at,
+          slug: publicChat.slug,
+        }
+
+        // Відправляємо всім в кімнаті загального чату
+        io.to(`public_chat:${publicChat.id}`).emit('public_chat_message', messageData)
+
+        console.log(`[WebSocket] Public chat message sent in ${slug} by user ${senderId}`)
+      } catch (error) {
+        console.error(`[WebSocket] Error sending public chat message for user ${socket.userId}:`, error)
+        socket.emit('error', { message: 'Failed to send message' })
+      }
+    })
+
+    // Отримання історії загального чату
+    socket.on('get_public_chat_history', async (data: { slug: string; limit?: number; offset?: number }) => {
+      console.log(`[WebSocket] get_public_chat_history request from user ${socket.userId} for chat ${data.slug}`)
+      try {
+        const { slug, limit = 50, offset = 0 } = data
+        const userId = socket.userId!
+
+        // Перевіряємо, чи існує загальний чат
+        const publicChat = await knex('public_chats_ai')
+          .where('slug', slug)
+          .where('is_active', true)
+          .first()
+
+        if (!publicChat) {
+          socket.emit('error', { message: 'Public chat not found' })
+          return
+        }
+
+        // Отримуємо повідомлення з інформацією про відправників
+        const messages = await knex('public_chat_messages_ai')
+          .leftJoin('users-ai', 'public_chat_messages_ai.sender_id', 'users-ai.id')
+          .leftJoin('public_chat_messages_ai as replies', 'public_chat_messages_ai.reply_to_id', 'replies.id')
+          .leftJoin('users-ai as reply_sender', 'replies.sender_id', 'reply_sender.id')
+          .where('public_chat_messages_ai.public_chat_id', publicChat.id)
+          .orderBy('public_chat_messages_ai.created_at', 'desc')
+          .limit(Number(limit))
+          .offset(Number(offset))
+          .select(
+            'public_chat_messages_ai.*',
+            'users-ai.name as sender_name',
+            'users-ai.avatar as sender_avatar',
+            'replies.content as reply_content',
+            'reply_sender.name as reply_sender_name'
+          )
+
+        // Формуємо відповідь
+        const formattedMessages = messages.reverse().map((msg) => ({
+          id: msg.id,
+          publicChatId: msg.public_chat_id,
+          content: msg.content,
+          senderId: msg.sender_id,
+          senderName: msg.sender_name,
+          senderAvatar: msg.sender_avatar,
+          isPinned: msg.is_pinned,
+          replyTo: msg.reply_to_id ? {
+            id: msg.reply_to_id,
+            content: msg.reply_content,
+            senderName: msg.reply_sender_name
+          } : null,
+          timestamp: msg.created_at,
+        }))
+
+        socket.emit('public_chat_history', {
+          type: 'public_chat_history',
+          chat: publicChat,
+          messages: formattedMessages,
+        })
+      } catch (error) {
+        console.error(`[WebSocket] Error getting public chat history for user ${socket.userId}:`, error)
+        socket.emit('error', { message: 'Failed to get chat history' })
+      }
+    })
+
+    // Отримання списку загальних чатів
+    socket.on('get_public_chats', async (data: { timestamp: string }) => {
+      console.log(`[WebSocket] get_public_chats request from user ${socket.userId}`)
+      try {
+        const publicChats = await knex('public_chats_ai')
+          .where('is_active', true)
+          .orderBy('created_at', 'asc')
+          .select('*')
+
+        // Для кожного загального чату отримуємо додаткову інформацію
+        const chatsWithDetails = await Promise.all(
+          publicChats.map(async (chat) => {
+            // Отримуємо останнє повідомлення
+            const lastMessage = await knex('public_chat_messages_ai')
+              .leftJoin('users-ai', 'public_chat_messages_ai.sender_id', 'users-ai.id')
+              .where('public_chat_messages_ai.public_chat_id', chat.id)
+              .orderBy('public_chat_messages_ai.created_at', 'desc')
+              .select(
+                'public_chat_messages_ai.*',
+                'users-ai.name as sender_name',
+                'users-ai.avatar as sender_avatar'
+              )
+              .first()
+
+            // Отримуємо кількість повідомлень за сьогодні
+            const todayMessagesCount = await knex('public_chat_messages_ai')
+              .where('public_chat_id', chat.id)
+              .where('created_at', '>=', knex.raw('CURRENT_DATE'))
+              .count('id as count')
+              .first()
+
+            return {
+              ...chat,
+              lastMessage: lastMessage ? {
+                id: lastMessage.id,
+                content: lastMessage.content,
+                senderName: lastMessage.sender_name,
+                senderAvatar: lastMessage.sender_avatar,
+                timestamp: lastMessage.created_at,
+              } : null,
+              todayMessagesCount: parseInt(String(todayMessagesCount?.count || '0')),
+            }
+          })
+        )
+
+        // Відправляємо всі загальні чати з деталями
+        socket.emit('public_chats_list', {
+          type: 'public_chats_list',
+          chats: chatsWithDetails,
+        })
+      } catch (error) {
+        console.error(`[WebSocket] Error getting public chats for user ${socket.userId}:`, error)
+        socket.emit('error', { message: 'Failed to get public chats' })
+      }
+    })
+
     // Відключення
     socket.on('disconnect', () => {
       console.log(`User disconnected: ${socket.userId} (${socket.userName})`)
