@@ -10,6 +10,8 @@ import {
   userNoteSchema,
   userRegisterSchema,
   userTaskSchema,
+  kpiTaskCreateSchema,
+  kpiTaskUpdateSchema,
 } from '../middlewares/user.schema'
 import {
   myDeadlinesDelete,
@@ -30,7 +32,13 @@ import { checkStatus, generateImage } from '../controllers/ai'
 import { authMiddleware } from '../middlewares/user.auth'
 import { forgotPassword, login, registration, resetPassword } from '../controllers/auth'
 import { myPortfolioDeleteIdea, myPortfolioGet, myPortfolioPost, myPortfolioPut } from '../controllers/portfolio'
-import { tgBotGet, tgBotPost } from '../controllers/bot'
+import { getBotActivationStatus } from '../controllers/bot'
+import { 
+  getKpiTasks, 
+  createKpiTask, 
+  updateKpiTask, 
+  deleteKpiTask, 
+} from '../controllers/kpi-tasks'
 import {
   analyzedFilesPost,
   analyzedFilesGet,
@@ -108,8 +116,7 @@ export function createAIRouter() {
   router.put('/ideas/:idea_id', authMiddleware, myPortfolioPut)
   router.delete('/ideas/:idea_id', authMiddleware, myPortfolioDeleteIdea)
 
-  router.get('/tg-bot', authMiddleware, tgBotGet)
-  router.post('/tg-bot', authMiddleware, validateSchema(tgBotSchema), tgBotPost)
+  router.get('/tg-bot/activation-status', authMiddleware, getBotActivationStatus)
 
   // Analyzed files routes
   router.post('/analyzed-files', authMiddleware, validateSchema(analyzedFilesSchema), analyzedFilesPost)
@@ -154,6 +161,12 @@ export function createAIRouter() {
   router.get('/public-chats/:slug', authMiddleware, getPublicChatBySlug)
   router.put('/public-chats/messages/:messageId/pin', authMiddleware, togglePinMessage)
   router.get('/public-chats/:slug/stats', authMiddleware, getPublicChatStats)
+
+  // KPI Tasks routes
+  router.get('/kpi-tasks', authMiddleware, getKpiTasks)
+  router.post('/kpi-tasks', authMiddleware, validateSchema(kpiTaskCreateSchema), createKpiTask)
+  router.put('/kpi-tasks/:id', authMiddleware, validateSchema(kpiTaskUpdateSchema), updateKpiTask)
+  router.delete('/kpi-tasks/:id', authMiddleware, deleteKpiTask)
 
   return router
 }
