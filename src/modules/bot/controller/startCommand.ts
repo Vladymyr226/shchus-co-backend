@@ -26,7 +26,7 @@ if(botUser && botUser.phone) {
     `Вітаємо, ${first_name} ${last_name !== undefined ? last_name : ''} 🎉`, 
   )
 }
-if(!botUser && !botUser.phone) {
+if(!botUser && !botUser?.phone) {
     const user = await db('users-ai').where({ id: userId }).first()
     if (user) {
       await db('bot_users').insert({
