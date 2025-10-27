@@ -13,6 +13,7 @@ import { Server } from 'socket.io'
 import { setupChatWebSocket } from './modules/ai/websocket/chat.websocket'
 import { botCommands } from './modules/bot/bot.commands'
 import { configureHealthCheckRouter } from './modules/common/routes/healthcheck.routes'
+import { setupCronJobs, stopCronJobs } from './modules/ai/services/cron-scheduler.service'
 
 const app = express()
 const server = http.createServer(app)
@@ -54,11 +55,15 @@ app.use(errorHandlerMiddleware)
 
 server.listen(PORT || 4000, () => {
   console.log(`Server listening at PORT:${PORT || 4000}`)
+  
+  // Инициализация cron jobs для уведомлений о KPI задачах
+  setupCronJobs()
 })
 
-// Graceful shutdown для Telegram бота
+// Graceful shutdown для Telegram бота и cron jobs
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully')
+  stopCronJobs()
   const bot = require('./modules/common/bot').default()
   if (bot && bot.stopPolling) {
     bot.stopPolling()
@@ -68,6 +73,7 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down gracefully')
+  stopCronJobs()
   const bot = require('./modules/common/bot').default()
   if (bot && bot.stopPolling) {
     bot.stopPolling()

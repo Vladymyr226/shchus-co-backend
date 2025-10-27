@@ -78,3 +78,20 @@ export const analyzedFilesSchema = Joi.object({
     })
   ).min(1).required()
 })
+
+// Схемы для KPI задач
+export const kpiTaskCreateSchema = Joi.object({
+  text: Joi.string().min(1).max(1000).required().trim().messages({
+    'string.empty': 'Текст задачи не может быть пустым',
+    'string.min': 'Текст задачи должен содержать минимум 1 символ',
+    'string.max': 'Текст задачи не может превышать 1000 символов'
+  })
+})
+
+export const kpiTaskUpdateSchema = Joi.object({
+  text: Joi.string().min(1).max(1000).optional().trim(),
+  deadline: Joi.string().isoDate().optional().messages({
+    'string.isoDate': 'Дедлайн должен быть в формате ISO 8601'
+  }),
+  is_completed: Joi.boolean().optional(),
+})
