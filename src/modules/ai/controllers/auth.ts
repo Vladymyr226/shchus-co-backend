@@ -1,9 +1,7 @@
 import { Request, Response } from 'express'
 import bcrypt from 'bcrypt'
 import db from '../../../db/knexKonfig'
-import { generateToken } from '../../../utils/token.utils'
-import { v4 as uuidv4 } from 'uuid'
-import { redis } from '../../../db/redisConfig'
+import { generateToken, generateResetPasswordToken, verifyResetPasswordToken } from '../../../utils/token.utils'
 import nodemailer from 'nodemailer'
 import { OAuth2Client } from 'google-auth-library'
 
@@ -130,16 +128,8 @@ export async function forgotPassword(req: Request, res: Response) {
       return res.status(401).json({ message: 'User not found' })
     }
 
-    const token = uuidv4()
-
-    await redis.set(
-      `reset-token:${token}`,
-      JSON.stringify({
-        user_id: user.id,
-      }),
-      'EX',
-      180
-    ) // 3min
+    // Генерируем JWT токен с сроком действия 3 минуты
+    const token = generateResetPasswordToken(user.id)
 
     const resetUrl = `${process.env.ORIGIN_URL}/reset-password?token=${token}`
 
@@ -147,9 +137,69 @@ export async function forgotPassword(req: Request, res: Response) {
       to: email,
       subject: 'Password Reset Request',
       html: `
-        <p>You requested a password reset</p>
-        <p>Click <a href="${resetUrl}">here</a> to reset your password</p>
-        <p>This link will expire in 3 minutes</p>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Password Reset</title>
+        </head>
+        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
+          <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;">
+            <tr>
+              <td align="center" style="padding: 40px 20px;">
+                <table role="presentation" style="max-width: 600px; width: 100%; border-collapse: collapse; background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  <tr>
+                    <td style="padding: 40px 40px 20px 40px; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px 8px 0 0;">
+                      <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 600;">Password Reset Request</h1>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 40px;">
+                      <p style="margin: 0 0 20px 0; color: #333333; font-size: 16px; line-height: 1.6;">
+                        Hello,
+                      </p>
+                      <p style="margin: 0 0 20px 0; color: #333333; font-size: 16px; line-height: 1.6;">
+                        We received a request to reset your password. Click the button below to create a new password:
+                      </p>
+                      <table role="presentation" style="width: 100%; border-collapse: collapse; margin: 30px 0;">
+                        <tr>
+                          <td align="center" style="padding: 0;">
+                            <a href="${resetUrl}" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #ffffff; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);">
+                              Reset Password
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      <p style="margin: 20px 0 0 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                        Or copy and paste this link into your browser:
+                      </p>
+                      <p style="margin: 10px 0 0 0; color: #667eea; font-size: 14px; word-break: break-all; line-height: 1.6;">
+                        ${resetUrl}
+                      </p>
+                      <div style="margin: 30px 0; padding: 20px; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                        <p style="margin: 0; color: #856404; font-size: 14px; line-height: 1.6;">
+                          <strong>⚠️ Important:</strong> This link will expire in <strong>3 minutes</strong> for security reasons.
+                        </p>
+                      </div>
+                      <p style="margin: 20px 0 0 0; color: #666666; font-size: 14px; line-height: 1.6;">
+                        If you didn't request a password reset, please ignore this email or contact support if you have concerns.
+                      </p>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding: 20px 40px; background-color: #f8f9fa; border-radius: 0 0 8px 8px; text-align: center;">
+                      <p style="margin: 0; color: #999999; font-size: 12px; line-height: 1.6;">
+                        This is an automated message, please do not reply to this email.
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </body>
+        </html>
       `,
     })
 
@@ -172,21 +222,19 @@ export async function resetPassword(req: Request, res: Response) {
       return res.status(401).json({ message: 'Passwords do not match' })
     }
 
-    const tokenData = await redis.get(`reset-token:${token}`)
+    // Верифицируем JWT токен
+    const tokenData = verifyResetPasswordToken(token.toString())
     if (!tokenData) {
       return res.status(401).json({ error: 'Invalid or expired token' })
     }
 
-    const { user_id } = JSON.parse(tokenData)
-    const user = await db('users-ai').where({ id: user_id }).first()
+    const user = await db('users-ai').where({ id: tokenData.userId }).first()
     if (!user) {
       return res.status(401).json({ message: 'User not found' })
     }
 
     const hashedPassword = bcrypt.hashSync(new_password.toString(), bcrypt.genSaltSync(7))
     await db('users-ai').where({ id: user.id }).update({ password: hashedPassword })
-
-    await redis.del(`reset-token:${token}`)
 
     res.status(201).json({ status: true })
   } catch (error) {
