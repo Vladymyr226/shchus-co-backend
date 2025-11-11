@@ -35,7 +35,7 @@ app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-const { PORT } = process.env
+const { PORT, ENABLE_CRON_JOBS = '0' } = process.env
 
 function addApiRoutes() {
   const router = Router({ mergeParams: true })
@@ -56,14 +56,20 @@ app.use(errorHandlerMiddleware)
 server.listen(PORT || 4000, () => {
   console.log(`Server listening at PORT:${PORT || 4000}`)
   
-  // Инициализация cron jobs для уведомлений о KPI задачах
-  setupCronJobs()
+  if (+ENABLE_CRON_JOBS) {
+    // Инициализация cron jobs для уведомлений о KPI задачах
+    setupCronJobs()
+  } else {
+    console.log('Cron jobs отключены переменной окружения ENABLE_CRON_JOBS')
+  }
 })
 
 // Graceful shutdown для Telegram бота и cron jobs
 process.on('SIGTERM', () => {
   console.log('SIGTERM received, shutting down gracefully')
-  stopCronJobs()
+  if (+ENABLE_CRON_JOBS) {
+    stopCronJobs()
+  }
   const bot = require('./modules/common/bot').default()
   if (bot && bot.stopPolling) {
     bot.stopPolling()
@@ -73,7 +79,9 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
   console.log('SIGINT received, shutting down gracefully')
-  stopCronJobs()
+  if (+ENABLE_CRON_JOBS) {
+    stopCronJobs()
+  }
   const bot = require('./modules/common/bot').default()
   if (bot && bot.stopPolling) {
     bot.stopPolling()
